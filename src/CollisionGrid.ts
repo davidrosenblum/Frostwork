@@ -1,6 +1,6 @@
-import { CollisionObject, Point } from "./Interfaces";
+import { Point } from "./Interfaces";
 
-export class CollisionGrid<T extends CollisionObject<T>>{
+export class CollisionGrid<T>{
     private _grid:T[][];
     private _tileSize:number;
 
@@ -28,10 +28,14 @@ export class CollisionGrid<T extends CollisionObject<T>>{
         return null;
     }
 
-    public getObjectAtPoint(point:Point):T{
-        let x:number = Math.round(point.x / this._tileSize);
-        let y:number = Math.round(point.y / this._tileSize);
+    public getObjectAtPixels(x:number, y:number):T{
+        let row:number = Math.round(x / this._tileSize);
+        let col:number = Math.round(y / this._tileSize);
 
-        return this.getObjectAt(x, y);  // checks bounds
+        return this.getObjectAt(row, col);  // checks bounds
+    }
+
+    public getObjectAtPoint(point:Point):T{
+        return this.getObjectAtPixels(point.x, point.y);  // checks bounds
     }
 }

@@ -1,6 +1,10 @@
 import { Object2D } from "./Object2D";
+import { SortableDraw2D } from "./Interfaces";
 
-export class TextField extends Object2D{
+export class TextField extends Object2D implements SortableDraw2D{
+    private static readonly CANVAS:HTMLCanvasElement = document.createElement("canvas");
+    private static readonly CTX:CanvasRenderingContext2D = TextField.CANVAS.getContext("2d");
+
     public static defaultFont:string = "15px calibri";
     public static defaultStrokeColor:string = "black";
     public static defaultFillColor:string = "white";
@@ -51,6 +55,23 @@ export class TextField extends Object2D{
 
     public set maxWidth(maxWidth:number){
         this._maxWidth = maxWidth || undefined;
+    }
+
+    public get width():number{
+        TextField.CTX.font = this.font;
+        return TextField.CTX.measureText(this.text).width;
+    }
+
+    public get height():number{
+        return parseFloat(this.font) || 0;
+    }
+
+    public get right():number{
+        return this.x + this.width;
+    }
+
+    public get bottom():number{
+        return this.y + this.height;
     }
 
     public get text():string{

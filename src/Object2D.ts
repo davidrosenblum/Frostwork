@@ -25,7 +25,7 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
     public abstract draw(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void;
 
     protected drawChildren(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void{
-        this._scene.draw(ctx, offsetX, offsetY);
+        this._scene.draw(ctx, this.x + offsetX, this.y + offsetY);
     }
 
     public setPosition(x:number, y:number):void{

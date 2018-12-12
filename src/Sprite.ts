@@ -2,7 +2,7 @@ import { AssetUtils } from "./AssetUtils";
 import { CollisionObject, SpriteConfig, Size } from "./Interfaces";
 import { Object2D } from "./Object2D";
 
-export class Sprite extends Object2D implements CollisionObject<Sprite>{
+export class Sprite extends Object2D implements CollisionObject{
     private static readonly EMPTY_IMAGE:HTMLImageElement = document.createElement("img");
 
     public static badImage:HTMLImageElement = null;
@@ -56,29 +56,44 @@ export class Sprite extends Object2D implements CollisionObject<Sprite>{
         return this._image;
     }
 
+     // uses actual bounding box
+    public hitBoxTest(target:Sprite):boolean{
+        if(this.x < target.right && target.x < this.right){
+            if(this.y < target.bottom && target.y < this.bottom){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // uses actual bounding box
-    public hitBoxTest(targets:Sprite[]):Sprite{
+    public hitBoxTests(targets:Sprite[]):Sprite{
         for(let target of targets){
-            if(this.x < target.right && target.x < this.right){
-                if(this.y < target.front && target.y < this.front){
-                    return target;
-                }
+            if(this.hitBoxTest(target)){
+                return target;
             }
         }
         return null;
     }
 
     // allows for custom bounding boxes 
-    public collisionTest(targets:Sprite[]):Sprite{
+    public collisionTest(target:Sprite):boolean{
         let bounds1:Size = this._collisionBounds;
-        let bounds2:Size = null;
+        let bounds2:Size = target.collisionBounds;
 
+        if(this.x < target.x + bounds2.width && target.x < this.x + bounds1.width){
+            if(this.y < target.y + bounds2.height - bounds2.depth && target.y < this.y + bounds1.height - bounds1.depth){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // allows for custom bounding boxes 
+    public collisionTests(targets:Sprite[]):Sprite{
         for(let target of targets){
-            bounds2 = target.collisionBounds;
-            if(this.x < target.x + bounds2.width && target.x < this.x + bounds1.width){
-                if(this.y < target.y + bounds2.height && target.y < this.y + bounds1.height){
-                    return target;
-                }
+            if(this.collisionTest(target)){
+                return target;
             }
         }
         return null;

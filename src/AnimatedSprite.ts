@@ -52,8 +52,8 @@ export class AnimatedSprite extends Sprite{
     }
 
     public playAnimation(animationName:string):void{
-        if(this.hasAnimation(animationName)){
-            this._currFrame = 0;
+        if(this.hasAnimation(animationName) && animationName !== this.currentAnimation){
+            this.restartAnimation();
             this._animating = true;
         }
     }
@@ -62,12 +62,16 @@ export class AnimatedSprite extends Sprite{
         this._animating = false;
     }
 
+    public restartAnimation():void{
+        this._currFrame = 0;
+    }
+
     public setAnimation(animationName:string, frames:AnimationFrameData[]):void{
         this._animations[animationName] = new Array<AnimationFrameData>(frames.length);
         frames.forEach((frame, i) => this._animations[animationName][i] = frame);
 
         if(this._currAnim = animationName){
-            this._currFrame = 0;
+            this.restartAnimation();
         }
     }
 

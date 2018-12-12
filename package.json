@@ -5,7 +5,34 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-      "build": "tsc",
-      "start": "tsc -w"
-  }
+    "build": "tsc",
+    "start": "tsc -w"
+  },
+  "name": "@davidrosenblum/frostwork",
+  "version": "0.1.0",
+  "description": "Top-down 2D game library for the HTML5 Canvas.",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidrosenblum/Frostwork.git"
+  },
+  "keywords": [
+    "javascript",
+    "game",
+    "2d",
+    "canvas",
+    "typescript\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dlibrary",
+    "canv\u001b[2~vas",
+    "typescript\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[\u001b[\u001b[\u001b[C\u001b[2\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001bas",
+    "2d",
+    "top",
+    "down",
+    "html5"
+  ],
+  "author": "David Rosenblum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidrosenblum/Frostwork/issues"
+  },
+  "homepage": "https://github.com/davidrosenblum/Frostwork#readme"
 }

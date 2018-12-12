@@ -1,4 +1,5 @@
 import { EventEmitter } from "./EventEmitter";
+import { GameEntityFacing } from "./Enums";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
 
@@ -18,14 +19,28 @@ export interface Size{
     depth:number;
 }
 
+export interface Bounds{
+    x:number;
+    y:number;
+    width:number;
+    height:number;
+}
+
 export interface Draw2D{
     draw(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void;
 }
 
-export interface CollisionObject<T extends CollisionObject<T>>{
-    hitBoxTest(target:T[]):T;
-    collisionTest(target:T[]):T;
+export interface CollisionObject{
+    hitBoxTest(target:CollisionObject):boolean;
+    collisionTest(target:CollisionObject):boolean;
+    hitBoxTests(target:CollisionObject[]):CollisionObject;
+    collisionTests(target:CollisionObject[]):CollisionObject;
     collisionBounds:Size;
+}
+
+export interface SortableDraw2D extends Draw2D{
+    id:string;
+    bottom:number;
 }
 
 export interface SpriteConfig{
@@ -62,4 +77,14 @@ export interface AnimationFrameData{
     clipY:number;
     clipWidth:number;
     clipHeight:number;
+}
+
+export interface GameEntityData{
+    x?:number;
+    y?:number;
+    facing?:GameEntityFacing;
+    anim?:string;
+    moveSpeed?:number;
+    objectID:string;
+    teamID?:string;
 }
