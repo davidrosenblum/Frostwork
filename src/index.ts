@@ -5,6 +5,7 @@ export { CollisionGrid } from "./CollisionGrid";
 export { AUTHOR, VERSION } from "./Constants";
 export * from "./Enums";
 export { EventEmitter } from "./EventEmitter";
+export { Game } from "./Game";
 export { GameEntity } from "./GameEntity";
 export * from "./Interfaces";
 export { MapUtils } from "./MapUtils";
