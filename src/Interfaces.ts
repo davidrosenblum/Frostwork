@@ -102,3 +102,10 @@ export interface GameMapConfig{
     midground:GameMapLayerConfig;
     foreground:GameMapLayerConfig;
 }
+
+export interface GameMovementKeys{
+    up:string[];
+    down:string[];
+    left:string[];
+    right:string[];
+}

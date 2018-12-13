@@ -15,55 +15,66 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Enums_1 = require("./Enums");
 var EventEmitter_1 = require("./EventEmitter");
+var KeyboardWatcher_1 = require("./KeyboardWatcher");
 var MapUtils_1 = require("./MapUtils");
-var MPGameEntity_1 = require("./MPGameEntity");
 var Renderer_1 = require("./Renderer");
 var Sprite_1 = require("./Sprite");
-var Game = (function (_super) {
-    __extends(Game, _super);
-    function Game(width, height) {
+var FrostworkGame = (function (_super) {
+    __extends(FrostworkGame, _super);
+    function FrostworkGame(width, height) {
         var _this = _super.call(this) || this;
         _this._renderer = new Renderer_1.Renderer(width, height);
-        _this._multiplayerObjects = new GameObjectsHelper();
+        _this._renderer.on("render", function () { return _this.emit("render"); });
         _this._layers = new GameLayersHelper();
+        _this._keyWatcher = null;
+        _this._playerMovement = new GamePlayerMovementHelper();
         _this._collisionGrid = null;
+        _this._bounds = null;
+        _this._scroller = null;
         _this._started = false;
+        _this.setMapBounds(0, 0, width, height);
         return _this;
     }
-    Game.prototype.start = function () {
-        if (!this.alreadyStarted) {
+    FrostworkGame.prototype.update = function () {
+        if (this._player) {
+            this._playerMovement.updatePlayerMovement(this._keyWatcher, this._player, this._collisionGrid, this._bounds, this._scroller);
+        }
+        this.emit("update");
+    };
+    FrostworkGame.prototype.start = function () {
+        if (!this.hasStarted) {
             this._layers.createLayers();
+            this._keyWatcher = new KeyboardWatcher_1.KeyboardWatcher();
             this._renderer.startRendering(this._layers.container.scene);
             this._started = true;
+            this.emit("start");
         }
     };
-    Game.prototype.togglePause = function () {
-        if (this.alreadyStarted) {
+    FrostworkGame.prototype.togglePause = function () {
+        if (this.hasStarted) {
             if (this._renderer.isRendering) {
                 this._renderer.stopRendering();
+                this.emit("pause");
             }
             else {
                 this._renderer.startRendering(this._layers.container.scene);
+                this.emit("resume");
             }
         }
     };
-    Game.prototype.stop = function () {
-        if (this.alreadyStarted) {
+    FrostworkGame.prototype.stop = function () {
+        if (this.hasStarted) {
             this._started = false;
             this._layers.destroyLayers();
+            this._keyWatcher = null;
             this._renderer.stopRendering();
-            this._multiplayerObjects.clear();
+            this.emit("stop");
         }
     };
-    Game.prototype.add = function (object, layer) {
+    FrostworkGame.prototype.add = function (object, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
-        if (this.alreadyStarted) {
+        if (this.hasStarted) {
             if (layer in this._layers) {
-                if (object instanceof MPGameEntity_1.MPGameEntity) {
-                    if (!this._multiplayerObjects.addObject(object)) {
-                        throw new Error("MP_ENTITY_ADD_ERROR: Multiplayer object already in the game.");
-                    }
-                }
                 return this._layers[layer].scene.addChild(object);
             }
             else
@@ -72,17 +83,11 @@ var Game = (function (_super) {
         else
             throw new Error("GAME_NOT_STARTED: Game can only add objects after it has been started.");
     };
-    Game.prototype.remove = function (target, layer) {
+    FrostworkGame.prototype.remove = function (target, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
-        if (this.alreadyStarted) {
+        if (this.hasStarted) {
             if (layer in this._layers) {
-                if (this._layers[layer].scene.removeChild(target) !== null) {
-                    if (target instanceof MPGameEntity_1.MPGameEntity) {
-                        this._multiplayerObjects.removeObject(target);
-                    }
-                    return true;
-                }
-                return false;
+                return this._layers[layer].scene.removeChild(target) !== null;
             }
             else
                 throw new Error("INVALID_LAYER: Layer ID is not valid.");
@@ -90,7 +95,7 @@ var Game = (function (_super) {
         else
             throw new Error("GAME_NOT_STARTED: Game can only remove objects after it has been started.");
     };
-    Game.prototype.setMap = function (config) {
+    FrostworkGame.prototype.setMap = function (config) {
         var _this = this;
         var layerConfigs = [config.background, config.midground, config.background];
         layerConfigs.forEach(function (layerConfig, index) {
@@ -108,43 +113,68 @@ var Game = (function (_super) {
             }
         });
     };
-    Game.prototype.removeAllChildren = function () {
+    FrostworkGame.prototype.setMapBounds = function (x, y, width, height) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (width === void 0) { width = -1; }
+        if (height === void 0) { height = -1; }
+        if (width < 0)
+            width = this.canvasWidth;
+        if (height < 0)
+            height = this.canvasHeight;
+        this._bounds = { x: x, y: y, width: width, height: height };
+    };
+    FrostworkGame.prototype.removeAllChildren = function () {
         this._layers.removeAllChildren();
     };
-    Game.prototype.resize = function (width, height) {
+    FrostworkGame.prototype.resize = function (width, height) {
         this._renderer.resize(width, height);
     };
-    Object.defineProperty(Game.prototype, "canvasWidth", {
+    Object.defineProperty(FrostworkGame.prototype, "canvasWidth", {
         get: function () {
             return this._renderer.canvasWidth;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Game.prototype, "canvasHeight", {
+    Object.defineProperty(FrostworkGame.prototype, "canvasHeight", {
         get: function () {
             return this._renderer.canvasHeight;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Game.prototype, "canvas", {
+    Object.defineProperty(FrostworkGame.prototype, "canvas", {
         get: function () {
             return this._renderer.canvas;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Game.prototype, "alreadyStarted", {
+    Object.defineProperty(FrostworkGame.prototype, "keyWatcher", {
+        get: function () {
+            return this._keyWatcher;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FrostworkGame.prototype, "mapBounds", {
+        get: function () {
+            return this._bounds;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FrostworkGame.prototype, "hasStarted", {
         get: function () {
             return this._started;
         },
         enumerable: true,
         configurable: true
     });
-    return Game;
+    return FrostworkGame;
 }(EventEmitter_1.EventEmitter));
-exports.Game = Game;
+exports.FrostworkGame = FrostworkGame;
 var GameLayersHelper = (function () {
     function GameLayersHelper() {
         this.container = null;
@@ -175,40 +205,34 @@ var GameLayersHelper = (function () {
     };
     return GameLayersHelper;
 }());
-var GameObjectsHelper = (function () {
-    function GameObjectsHelper() {
-        this.objects = null;
+var GamePlayerMovementHelper = (function () {
+    function GamePlayerMovementHelper() {
+        this.movementKeys = {
+            up: ["w"],
+            down: ["s"],
+            left: ["a"],
+            right: ["d"]
+        };
     }
-    GameObjectsHelper.prototype.addObject = function (object) {
-        if (this.containsObject(object)) {
-            this.objects[object.objectID] = object;
-            return true;
+    GamePlayerMovementHelper.prototype.updatePlayerMovement = function (keyWatcher, player, grid, bounds, scroller) {
+        if (keyWatcher.numKeys > 0) {
+            if (keyWatcher.anyKeysDown(this.movementKeys.up)) {
+                player.moveUp(grid, bounds, scroller);
+            }
+            else if (keyWatcher.anyKeysDown(this.movementKeys.down)) {
+                player.moveDown(grid, bounds, scroller);
+            }
+            if (keyWatcher.anyKeysDown(this.movementKeys.left)) {
+                player.moveLeft(grid, bounds, scroller);
+            }
+            else if (keyWatcher.anyKeysDown(this.movementKeys.right)) {
+                player.moveRight(grid, bounds, scroller);
+            }
         }
-        return false;
     };
-    GameObjectsHelper.prototype.removeObject = function (object) {
-        return delete this.objects[object.objectID];
+    GamePlayerMovementHelper.prototype.setMovementKeys = function (movementKeys) {
+        var up = movementKeys.up, down = movementKeys.down, left = movementKeys.left, right = movementKeys.right;
+        this.movementKeys = { up: up, down: down, left: left, right: right };
     };
-    GameObjectsHelper.prototype.updateObject = function (data) {
-        var object = this.getObject(data.objectID);
-        if (object) {
-            object.applyUpdate(data);
-            return true;
-        }
-        return false;
-    };
-    GameObjectsHelper.prototype.clear = function () {
-        this.objects = {};
-    };
-    GameObjectsHelper.prototype.containsObject = function (object) {
-        if (typeof object === "string") {
-            return object in this.objects;
-        }
-        return object.objectID in this.objects;
-    };
-    GameObjectsHelper.prototype.getObject = function (objectID) {
-        return this.objects[objectID] || null;
-        ;
-    };
-    return GameObjectsHelper;
+    return GamePlayerMovementHelper;
 }());

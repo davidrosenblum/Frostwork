@@ -24,6 +24,13 @@ var GameEntity = (function (_super) {
         _this.canMove = true;
         return _this;
     }
+    GameEntity.prototype.getHit = function (grid) {
+        if (grid) {
+            var hit = grid.getObjectAtPixels(this.x, this.y);
+            return this.collisionTest(hit) ? hit : null;
+        }
+        return null;
+    };
     GameEntity.prototype.move = function (grid, bounds, scroller) {
         if (this.canMove) {
             switch (this.facing) {
@@ -42,16 +49,70 @@ var GameEntity = (function (_super) {
             }
         }
     };
+    GameEntity.prototype.moveUp = function (grid, bounds, scroller) {
+        var y = this.y - this.moveSpeed;
+        if (grid) {
+            var hit = grid.getObjectAtPixels(this.x, y);
+            if (hit && this.collisionTest(hit)) {
+                return hit;
+            }
+        }
+        if (bounds && y < bounds.y) {
+            y = bounds.y;
+        }
+        if (scroller) {
+        }
+        this.y = y;
+        return null;
+    };
+    GameEntity.prototype.moveDown = function (grid, bounds, scroller) {
+        var y = this.y - this.moveSpeed;
+        if (grid) {
+            var hit = grid.getObjectAtPixels(this.x, y + this.height);
+            if (hit && this.collisionTest(hit)) {
+                return hit;
+            }
+        }
+        if (bounds) {
+            var boundsBottom = bounds.y + bounds.height;
+            if (y + this.height > boundsBottom) {
+                y = boundsBottom - this.height;
+            }
+        }
+        if (scroller) {
+        }
+        this.y = y;
+        return null;
+    };
     GameEntity.prototype.moveLeft = function (grid, bounds, scroller) {
         var x = this.x - this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtPixels(this.x, this.y);
+            var hit = grid.getObjectAtPixels(x, this.y);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }
         }
         if (bounds && x < bounds.x) {
             x = bounds.x;
+        }
+        if (scroller) {
+        }
+        this.x = x;
+        return null;
+    };
+    GameEntity.prototype.moveRight = function (grid, bounds, scroller) {
+        var x = this.x + this.moveSpeed;
+        if (grid) {
+            var hit = grid.getObjectAtPixels(x, this.bottom);
+            if (hit && this.collisionTest(hit)) {
+                return hit;
+            }
+        }
+        if (bounds) {
+            var boundsRight = bounds.x + bounds.width;
+            if (x + this.width > boundsRight) {
+                x = boundsRight - this.width;
+            }
         }
         if (scroller) {
         }

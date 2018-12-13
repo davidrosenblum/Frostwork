@@ -1,92 +1,105 @@
 import { CollisionGrid } from "./CollisionGrid";
 import { GameLayer } from "./Enums";
 import { EventEmitter } from "./EventEmitter";
+import { GameEntity } from "./GameEntity";
+import { KeyboardWatcher } from "./KeyboardWatcher";
 import { MapUtils } from "./MapUtils";
-import { MPGameEntity } from "./MPGameEntity";
-import { SortableDraw2D, GameEntityData, GameMapConfig, GameMapLayerConfig, MapConfig } from "./Interfaces";
+import { SortableDraw2D, GameMapConfig, GameMapLayerConfig, MapConfig, Bounds, GameMovementKeys } from "./Interfaces";
 import { Renderer } from "./Renderer";
+import { Scroller } from "./Scroller";
 import { Sprite } from "./Sprite";
 
-export class Game extends EventEmitter{
+export class FrostworkGame extends EventEmitter{
     private _renderer:Renderer;
-    private _multiplayerObjects:GameObjectsHelper;
     private _layers:GameLayersHelper;
+    private _keyWatcher:KeyboardWatcher;
+    private _playerMovement:GamePlayerMovementHelper;
     private _collisionGrid:CollisionGrid<Sprite>;
+    private _bounds:Bounds;
+    private _scroller:Scroller;
+    private _player:GameEntity;
     private _started:boolean;
 
     constructor(width?:number, height?:number){
         super();
 
         this._renderer = new Renderer(width, height);
-        this._multiplayerObjects = new GameObjectsHelper();
+        this._renderer.on("render", () => this.emit("render"));
+        
         this._layers = new GameLayersHelper();
+
+        this._keyWatcher = null;
+        this._playerMovement = new GamePlayerMovementHelper();
+
         this._collisionGrid = null;
+        this._bounds = null;
+
+        this._scroller = null;
+
         this._started = false;
+
+        this.setMapBounds(0, 0, width, height);
+    }
+
+    private update():void{
+        if(this._player){
+            this._playerMovement.updatePlayerMovement(this._keyWatcher, this._player, this._collisionGrid, this._bounds, this._scroller);
+        }
+
+        this.emit("update");
     }
 
     public start():void{
-        if(!this.alreadyStarted){
+        if(!this.hasStarted){
             this._layers.createLayers();
+            this._keyWatcher = new KeyboardWatcher();
             this._renderer.startRendering(this._layers.container.scene);
             this._started = true;
+            this.emit("start");
         }
     }
 
     public togglePause():void{
-        if(this.alreadyStarted){
+        if(this.hasStarted){
             if(this._renderer.isRendering){
                 this._renderer.stopRendering();
+                this.emit("pause");
             }
             else{
                 this._renderer.startRendering(this._layers.container.scene);
+                this.emit("resume");
             }
         }
     }
 
     public stop():void{
-        if(this.alreadyStarted){
+        if(this.hasStarted){
             this._started = false;
             this._layers.destroyLayers();
+            this._keyWatcher = null;
             this._renderer.stopRendering();
-            this._multiplayerObjects.clear();
+            this.emit("stop");
         }
     }
 
     public add(object:SortableDraw2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
         // game must be initialized
-        if(this.alreadyStarted){
+        if(this.hasStarted){
             // layer must exist
             if(layer in this._layers){
-                // if the object is multiplayer - make sure its not a dupe
-                if(object instanceof MPGameEntity){
-                    // dupe - error
-                    if(!this._multiplayerObjects.addObject(object)){
-                        throw new Error("MP_ENTITY_ADD_ERROR: Multiplayer object already in the game.");
-                    }
-                }
-                
-                // not dupe or not multiplayer - add it
                 return this._layers[layer].scene.addChild(object);
             }
-            else throw new Error("INVALID_LAYER: Layer ID is not valid.");
+            else throw new Error("INVALID_LAYER: Layer ID is not valid."); 
         }
         else throw new Error("GAME_NOT_STARTED: Game can only add objects after it has been started.");
     }
 
     public remove(target:SortableDraw2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
         // game must be initialized
-        if(this.alreadyStarted){
+        if(this.hasStarted){
             // layer must exist
             if(layer in this._layers){
-                // remove from canvas
-                if(this._layers[layer].scene.removeChild(target) !== null){
-                    // removed - if multiplayer object delete it
-                    if(target instanceof MPGameEntity){
-                        this._multiplayerObjects.removeObject(target);
-                    }
-                    return true;
-                }
-                return false;
+                return this._layers[layer].scene.removeChild(target) !== null;
             }
             else throw new Error("INVALID_LAYER: Layer ID is not valid.");
         }
@@ -113,6 +126,13 @@ export class Game extends EventEmitter{
         });
     }
 
+    public setMapBounds(x:number=0, y:number=0, width:number=-1, height:number=-1):void{
+        if(width < 0) width = this.canvasWidth;
+        if(height < 0) height = this.canvasHeight;
+
+        this._bounds = { x, y, width, height };
+    }
+
     public removeAllChildren():void{
         this._layers.removeAllChildren();
     }
@@ -129,7 +149,19 @@ export class Game extends EventEmitter{
         return this._renderer.canvasHeight;
     }
 
-    public get alreadyStarted():boolean{
+    public get canvas():HTMLCanvasElement{
+        return this._renderer.canvas;
+    }
+
+    public get keyWatcher():KeyboardWatcher{
+        return this._keyWatcher;
+    }
+
+    public get mapBounds():Bounds{
+        return this._bounds;
+    }
+
+    public get hasStarted():boolean{
         return this._started;
     }
 }
@@ -174,46 +206,37 @@ class GameLayersHelper{
     }
 }
 
-class GameObjectsHelper{
-    public objects:{[id:string]: MPGameEntity};
+class GamePlayerMovementHelper{
+    public movementKeys:GameMovementKeys;
 
     constructor(){
-        this.objects = null;
+        this.movementKeys = {
+            up:       ["w"],
+            down:     ["s"],
+            left:     ["a"],
+            right:    ["d"]
+        };
     }
 
-    public addObject(object:MPGameEntity):boolean{
-        if(this.containsObject(object)){
-            this.objects[object.objectID] = object;
-            return true;
+    public updatePlayerMovement(keyWatcher:KeyboardWatcher, player:GameEntity, grid:CollisionGrid<Sprite>, bounds:Bounds, scroller:Scroller):void{
+        if(keyWatcher.numKeys > 0){
+            if(keyWatcher.anyKeysDown(this.movementKeys.up)){
+                player.moveUp(grid, bounds, scroller);
+            }
+            else if(keyWatcher.anyKeysDown(this.movementKeys.down)){
+                player.moveDown(grid, bounds, scroller);
+            }
+            if(keyWatcher.anyKeysDown(this.movementKeys.left)){
+                player.moveLeft(grid, bounds, scroller);
+            }
+            else if(keyWatcher.anyKeysDown(this.movementKeys.right)){
+                player.moveRight(grid, bounds, scroller);
+            }
         }
-        return false;
     }
 
-    public removeObject(object:MPGameEntity):boolean{
-        return delete this.objects[object.objectID];
-    }
-
-    public updateObject(data:GameEntityData):boolean{
-        let object:MPGameEntity = this.getObject(data.objectID);
-        if(object){
-            object.applyUpdate(data);
-            return true;
-        }
-        return false;
-    }
-
-    public clear():void{
-        this.objects = {};
-    }
-
-    public containsObject(object:MPGameEntity|string):boolean{
-        if(typeof object === "string"){
-            return object in this.objects;
-        }
-        return object.objectID in this.objects;
-    }
-
-    public getObject(objectID:string):MPGameEntity{
-        return this.objects[objectID] || null;;
+    public setMovementKeys(movementKeys:GameMovementKeys):void{
+        let { up, down, left, right } = movementKeys;
+        this.movementKeys = { up, down, left, right };
     }
 }

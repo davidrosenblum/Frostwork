@@ -27,7 +27,10 @@ export class MapUtils{
                     }
 
                     grid.storeObjectAt(tile, x, y);
-                    config.scene.addChild(tile);
+
+                    if(config.scene){
+                        config.scene.addChild(tile);   
+                    }
                 }
             });
         });

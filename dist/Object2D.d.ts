@@ -8,6 +8,7 @@ export declare abstract class Object2D extends EventEmitter implements Draw2D {
     private _size;
     private _scene;
     private _parent;
+    private _alpha;
     visible: boolean;
     constructor(width?: number, height?: number, x?: number, y?: number);
     abstract draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
@@ -21,6 +22,7 @@ export declare abstract class Object2D extends EventEmitter implements Draw2D {
     width: number;
     height: number;
     depth: number;
+    alpha: number;
     readonly position: Point;
     readonly size: Size;
     readonly centerX: number;

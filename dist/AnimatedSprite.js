@@ -33,7 +33,10 @@ var AnimatedSprite = (function (_super) {
                 var x = this.x + offsetX;
                 var y = this.y + offsetY;
                 var anim = this._animations[this._currAnim][this._currFrame];
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
                 ctx.drawImage(this.imageElement, anim.clipX, anim.clipY, anim.clipWidth, anim.clipHeight, x, y, this.width, this.height);
+                ctx.restore();
                 this.drawChildren(ctx, x, y);
             }
             else

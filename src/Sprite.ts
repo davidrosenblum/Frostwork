@@ -36,7 +36,10 @@ export class Sprite extends Object2D implements CollisionObject{
             let x:number = this.x + offsetX;
             let y:number = this.y + offsetY;
 
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
             ctx.drawImage(this._image, x, y, this.width, this.height);
+            ctx.restore();
 
             this.drawChildren(ctx, x, y);
         }

@@ -11,7 +11,7 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
     private _size:Size;
     private _scene:Scene;
     private _parent:Object2D;
-
+    private _alpha:number;
     public visible:boolean;
 
     constructor(width:number=0, height:number=0, x:number=0, y:number=0){
@@ -22,7 +22,7 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
         this._size = { width, height, depth: height - width };
         this._scene = new Scene();
         this._parent = null;
-
+        this._alpha = 1;
         this.visible = true;
     }
     
@@ -77,6 +77,10 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
         this.emit("resize");
     }
 
+    public set alpha(alpha:number){
+        this._alpha = Math.min(Math.max(alpha, 0), 1);
+    }
+
     public get position():Point{
         return this._position;
     }
@@ -127,6 +131,10 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
 
     public get scene():Scene{
         return this._scene;
+    }
+
+    public get alpha():number{
+        return this._alpha;
     }
 
     public get id():string{

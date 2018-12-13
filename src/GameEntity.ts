@@ -18,6 +18,14 @@ export class GameEntity extends AnimatedSprite{
         this.canMove = true;
     }
 
+    private getHit(grid?:CollisionGrid<Sprite>):Sprite{
+        if(grid){
+            let hit:Sprite = grid.getObjectAtPixels(this.x, this.y);
+            return this.collisionTest(hit) ? hit : null;
+        }
+        return null;
+    }
+
     public move(grid?:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):void{
         if(this.canMove){
             switch(this.facing){
@@ -37,11 +45,58 @@ export class GameEntity extends AnimatedSprite{
         }
     }
 
+    public moveUp(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        let y:number = this.y - this.moveSpeed;
+
+        if(grid){
+            let hit:Sprite = grid.getObjectAtPixels(this.x, y);
+            if(hit && this.collisionTest(hit)){
+                return hit;
+            }
+        }
+
+        if(bounds && y < bounds.y){
+            y = bounds.y;
+        }
+
+        if(scroller){
+            // scroll left by this.x - x pixels 
+        }
+
+        this.y = y;
+        return null;
+    }
+
+    public moveDown(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        let y:number = this.y - this.moveSpeed;
+
+        if(grid){
+            let hit:Sprite = grid.getObjectAtPixels(this.x, y + this.height);
+            if(hit && this.collisionTest(hit)){
+                return hit;
+            }
+        }
+
+        if(bounds){
+            let boundsBottom:number = bounds.y + bounds.height;
+            if(y + this.height > boundsBottom){
+                y = boundsBottom - this.height;
+            }
+        }
+
+        if(scroller){
+            // scroll left by this.x - x pixels 
+        }
+
+        this.y = y;
+        return null;
+    }
+
     public moveLeft(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
         let x:number = this.x - this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtPixels(this.x, this.y);
+            let hit:Sprite = grid.getObjectAtPixels(x, this.y);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }
@@ -53,6 +108,31 @@ export class GameEntity extends AnimatedSprite{
 
         if(scroller){
             // scroll left by this.x - x pixels 
+        }
+
+        this.x = x;
+        return null;
+    }
+
+    public moveRight(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        let x:number = this.x + this.moveSpeed;
+
+        if(grid){
+            let hit:Sprite = grid.getObjectAtPixels(x, this.bottom);
+            if(hit && this.collisionTest(hit)){
+                return hit;
+            }
+        }
+
+        if(bounds){
+            let boundsRight:number = bounds.x + bounds.width;
+            if(x + this.width > boundsRight){
+                x = boundsRight - this.width;
+            }
+        }
+
+        if(scroller){
+            // scroll right
         }
 
         this.x = x;

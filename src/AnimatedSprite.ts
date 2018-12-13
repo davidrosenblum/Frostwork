@@ -24,13 +24,16 @@ export class AnimatedSprite extends Sprite{
                 let x:number = this.x + offsetX;
                 let y:number = this.y + offsetY;
 
-                let anim = this._animations[this._currAnim][this._currFrame];
+                let anim:AnimationFrameData = this._animations[this._currAnim][this._currFrame];
 
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
                 ctx.drawImage(
                     this.imageElement,
                     anim.clipX, anim.clipY, anim.clipWidth, anim.clipHeight,
                     x, y, this.width, this.height
                 );
+                ctx.restore();
 
                 this.drawChildren(ctx, x, y);
             }

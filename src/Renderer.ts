@@ -1,11 +1,14 @@
+import { EventEmitter } from "./EventEmitter";
 import { Scene } from "./Scene";
 
-export class Renderer{
+export class Renderer extends EventEmitter{
     private _canvas:HTMLCanvasElement;
     private _context:CanvasRenderingContext2D;
     private _rendering:boolean;
 
     constructor(width:number=550, height:number=400){
+        super();
+
         this._canvas = document.createElement("canvas");
         this._context = this._canvas.getContext("2d");       
         this._rendering = false;
@@ -18,6 +21,8 @@ export class Renderer{
     }
 
     private renderFrame(scene:Scene):void{
+        this.emit("render");
+        
         this.clear();
         scene.draw(this._context, 0, 0);
 

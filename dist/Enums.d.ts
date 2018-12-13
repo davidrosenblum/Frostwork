@@ -5,4 +5,8 @@ export declare enum GameEntityFacing {
     RIGHT = "right"
 }
 export declare enum GameLayer {
+    BACKGROUND = 1,
+    MIDGROUND = 2,
+    FOREGROUND = 3,
+    HUD = 4
 }

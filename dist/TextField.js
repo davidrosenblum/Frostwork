@@ -16,13 +16,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Object2D_1 = require("./Object2D");
 var TextField = (function (_super) {
     __extends(TextField, _super);
-    function TextField(text, x, y, font, fillColor, strokeColor) {
+    function TextField(text, x, y, font, fillStyle, strokeStyle) {
         if (text === void 0) { text = null; }
         var _this = _super.call(this, x, y) || this;
         _this.text = text;
         _this.font = font;
-        _this.strokeColor = strokeColor;
-        _this.fillColor = fillColor;
+        _this.strokeStyle = strokeStyle;
+        _this.fillStyle = fillStyle;
         _this.maxWidth = undefined;
         return _this;
     }
@@ -33,8 +33,14 @@ var TextField = (function (_super) {
             this.emit("draw");
             var x = this.x + offsetX;
             var y = this.y + offsetY;
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.font = this.font;
+            ctx.fillStyle = this.fillStyle;
+            ctx.strokeStyle = this.strokeStyle;
             ctx.fillText(this.text, x, y, this.maxWidth);
             ctx.strokeText(this.text, x, y, this.maxWidth);
+            ctx.restore();
         }
     };
     Object.defineProperty(TextField.prototype, "text", {
@@ -52,27 +58,27 @@ var TextField = (function (_super) {
             return this._font;
         },
         set: function (font) {
-            this._fillColor = font || TextField.defaultFont;
+            this._font = font || TextField.defaultFont;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(TextField.prototype, "strokeColor", {
+    Object.defineProperty(TextField.prototype, "strokeStyle", {
         get: function () {
-            return this._strokeColor;
+            return this._strokeStyle;
         },
         set: function (strokeColor) {
-            this._strokeColor = strokeColor || TextField.defaultStrokeColor;
+            this._strokeStyle = strokeColor || TextField.defaultStrokeColor;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(TextField.prototype, "fillColor", {
+    Object.defineProperty(TextField.prototype, "fillStyle", {
         get: function () {
-            return this._fillColor;
+            return this._fillStyle;
         },
         set: function (fillColor) {
-            this._fillColor = fillColor || TextField.defaultFillColor;
+            this._fillStyle = fillColor || TextField.defaultFillColor;
         },
         enumerable: true,
         configurable: true

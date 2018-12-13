@@ -74,7 +74,10 @@ var Sprite = (function (_super) {
             this.emit("draw");
             var x = this.x + offsetX;
             var y = this.y + offsetY;
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
             ctx.drawImage(this._image, x, y, this.width, this.height);
+            ctx.restore();
             this.drawChildren(ctx, x, y);
         }
     };

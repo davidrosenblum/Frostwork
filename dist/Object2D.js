@@ -29,6 +29,7 @@ var Object2D = (function (_super) {
         _this._size = { width: width, height: height, depth: height - width };
         _this._scene = new Scene_1.Scene();
         _this._parent = null;
+        _this._alpha = 1;
         _this.visible = true;
         return _this;
     }
@@ -102,6 +103,16 @@ var Object2D = (function (_super) {
         set: function (depth) {
             this._size.depth = depth;
             this.emit("resize");
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Object2D.prototype, "alpha", {
+        get: function () {
+            return this._alpha;
+        },
+        set: function (alpha) {
+            this._alpha = Math.min(Math.max(alpha, 0), 1);
         },
         enumerable: true,
         configurable: true
