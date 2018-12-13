@@ -27,6 +27,7 @@ export class MapUtils{
                     }
 
                     grid.storeObjectAt(tile, x, y);
+                    config.scene.addChild(tile);
                 }
             });
         });

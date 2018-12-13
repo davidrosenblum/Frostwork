@@ -140,6 +140,13 @@ export class Scene implements Draw2D{
         return -1;
     }
 
+    public forEachChild(fn:(child:SortableDraw2D, index?:number)=>any):void{
+        let i:number = 0;
+        for(let object of this._drawList){
+            fn(object, i++);
+        }
+    }
+
     public getChildById(id:string):SortableDraw2D{
         return this._childIDs[id] || null;
     }

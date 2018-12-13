@@ -5,13 +5,20 @@ export class Renderer{
     private _context:CanvasRenderingContext2D;
     private _rendering:boolean;
 
-    constructor(){
+    constructor(width:number=550, height:number=400){
         this._canvas = document.createElement("canvas");
         this._context = this._canvas.getContext("2d");       
         this._rendering = false;
+
+        this.resize(width, height);
     }   
 
+    private clear():void{
+        this._context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    }
+
     private renderFrame(scene:Scene):void{
+        this.clear();
         scene.draw(this._context, 0, 0);
 
         if(this.isRendering){

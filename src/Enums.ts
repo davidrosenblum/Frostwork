@@ -1,6 +1,10 @@
 export enum GameEntityFacing{
-    LEFT = "left",
+    UP =    "up",
+    DOWN =  "down",
+    LEFT =  "left",
     RIGHT = "right",
-    UP = "up",
-    DOWN = "down"
+}
+
+export enum GameLayer{
+    
 }

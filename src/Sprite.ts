@@ -8,14 +8,12 @@ export class Sprite extends Object2D implements CollisionObject{
     public static badImage:HTMLImageElement = null;
 
     private _image:HTMLImageElement;
-    private _size:Size;
     private _collisionBounds:Size;
     
-    constructor(image?:string, width:number=0, height:number=0, x?:number, y?:number){
-        super(x, y);
+    constructor(image?:string, width?:number, height?:number, x?:number, y?:number){
+        super(width, height, x, y);
 
         this._image = Sprite.EMPTY_IMAGE;
-        this._size = { width, height, depth: height - width };
         this._collisionBounds = null;
 
         if(image) this.setImage(image);
@@ -99,11 +97,6 @@ export class Sprite extends Object2D implements CollisionObject{
         return null;
     }
 
-    public setSize(width:number, height:number, depth?:number):void{
-        this._size = { width, height, depth: depth || height - width }
-    }
-
-
     public setCustomCollisionBounds(width:number, height:number, depth?:number):void{
         this._collisionBounds = { width, height, depth: depth || height - width };
     }
@@ -111,45 +104,9 @@ export class Sprite extends Object2D implements CollisionObject{
     public useDefaultCollisionBounds():void{
         this._collisionBounds = null;
     }
-
-    public set depth(depth){
-        this._size.depth = depth;
-    }
     
     public get collisionBounds():Size{
-        return this._collisionBounds || this._size;
-    }
-
-    public get centerX():number{
-        return this.x + this.width / 2;
-    }
-
-    public get centerY():number{
-        return this.y + this.height / 2;
-    }
-
-    public get right():number{
-        return this.x + this.width;
-    }
-
-    public get front():number{
-        return this.bottom - this.depth;
-    }
-
-    public get bottom():number{
-        return this.y + this.height;
-    }
-
-    public get width():number{
-        return this._size.width;
-    }
-
-    public get height():number{
-        return this._size.height;
-    }
-
-    public get depth():number{
-        return this._size.depth;
+        return this._collisionBounds || this.size;
     }
 
     public get imageElement():HTMLImageElement{

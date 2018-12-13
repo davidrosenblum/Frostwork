@@ -57,6 +57,14 @@ export class TextField extends Object2D implements SortableDraw2D{
         this._maxWidth = maxWidth || undefined;
     }
 
+    public set width(width:number){
+        // do nothing
+    }
+
+    public set height(height:number){
+        // do nothing
+    }
+
     public get width():number{
         TextField.CTX.font = this.font;
         return TextField.CTX.measureText(this.text).width;

@@ -88,3 +88,17 @@ export interface GameEntityData{
     objectID:string;
     teamID?:string;
 }
+
+export interface GameMapLayerConfig{
+    tileLayout:number[][];
+    tileTypes:(typeof Sprite)[];
+    offsetX?:number;
+    offsetY?:number;
+}
+
+export interface GameMapConfig{
+    tileSize:number;
+    background:GameMapLayerConfig;
+    midground:GameMapLayerConfig;
+    foreground:GameMapLayerConfig;
+}
