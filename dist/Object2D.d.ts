@@ -1,16 +1,34 @@
 import { EventEmitter } from "./EventEmitter";
-import { Draw2D } from "./Interfaces";
+import { Draw2D, Point, Size } from "./Interfaces";
+import { Scene } from "./Scene";
 export declare abstract class Object2D extends EventEmitter implements Draw2D {
     private static tokens;
     private _id;
     private _position;
+    private _size;
     private _scene;
+    private _parent;
     visible: boolean;
-    constructor(x?: number, y?: number);
+    constructor(width?: number, height?: number, x?: number, y?: number);
     abstract draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
     protected drawChildren(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
+    protected setParent(parent: Object2D): void;
     setPosition(x: number, y: number): void;
+    setSize(width: number, height: number, depth?: number): void;
+    remove(): void;
     x: number;
     y: number;
+    width: number;
+    height: number;
+    depth: number;
+    readonly position: Point;
+    readonly size: Size;
+    readonly centerX: number;
+    readonly centerY: number;
+    readonly right: number;
+    readonly front: number;
+    readonly bottom: number;
+    readonly scene: Scene;
     readonly id: string;
+    readonly parent: Object2D;
 }

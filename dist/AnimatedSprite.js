@@ -52,20 +52,23 @@ var AnimatedSprite = (function (_super) {
         }
     };
     AnimatedSprite.prototype.playAnimation = function (animationName) {
-        if (this.hasAnimation(animationName)) {
-            this._currFrame = 0;
+        if (this.hasAnimation(animationName) && animationName !== this.currentAnimation) {
+            this.restartAnimation();
             this._animating = true;
         }
     };
     AnimatedSprite.prototype.stopAnimation = function () {
         this._animating = false;
     };
+    AnimatedSprite.prototype.restartAnimation = function () {
+        this._currFrame = 0;
+    };
     AnimatedSprite.prototype.setAnimation = function (animationName, frames) {
         var _this = this;
         this._animations[animationName] = new Array(frames.length);
         frames.forEach(function (frame, i) { return _this._animations[animationName][i] = frame; });
         if (this._currAnim = animationName) {
-            this._currFrame = 0;
+            this.restartAnimation();
         }
     };
     AnimatedSprite.prototype.hasAnimation = function (animationName) {

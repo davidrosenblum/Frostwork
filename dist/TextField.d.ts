@@ -1,5 +1,8 @@
 import { Object2D } from "./Object2D";
-export declare class TextField extends Object2D {
+import { SortableDraw2D } from "./Interfaces";
+export declare class TextField extends Object2D implements SortableDraw2D {
+    private static readonly CANVAS;
+    private static readonly CTX;
     static defaultFont: string;
     static defaultStrokeColor: string;
     static defaultFillColor: string;
@@ -15,4 +18,8 @@ export declare class TextField extends Object2D {
     strokeColor: string;
     fillColor: string;
     maxWidth: number;
+    width: number;
+    height: number;
+    readonly right: number;
+    readonly bottom: number;
 }

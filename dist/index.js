@@ -1,4 +1,7 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimatedSprite_1 = require("./AnimatedSprite");
 exports.AnimatedSprite = AnimatedSprite_1.AnimatedSprite;
@@ -11,8 +14,11 @@ exports.CollisionGrid = CollisionGrid_1.CollisionGrid;
 var Constants_1 = require("./Constants");
 exports.AUTHOR = Constants_1.AUTHOR;
 exports.VERSION = Constants_1.VERSION;
+__export(require("./Enums"));
 var EventEmitter_1 = require("./EventEmitter");
 exports.EventEmitter = EventEmitter_1.EventEmitter;
+var GameEntity_1 = require("./GameEntity");
+exports.GameEntity = GameEntity_1.GameEntity;
 var MapUtils_1 = require("./MapUtils");
 exports.MapUtils = MapUtils_1.MapUtils;
 var Object2D_1 = require("./Object2D");
@@ -21,6 +27,8 @@ var Renderer_1 = require("./Renderer");
 exports.Renderer = Renderer_1.Renderer;
 var Scene_1 = require("./Scene");
 exports.Scene = Scene_1.Scene;
+var Scroller_1 = require("./Scroller");
+exports.Scroller = Scroller_1.Scroller;
 var Sprite_1 = require("./Sprite");
 exports.Sprite = Sprite_1.Sprite;
 var TextField_1 = require("./TextField");

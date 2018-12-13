@@ -60,6 +60,48 @@ var Scene = (function () {
             }
         }
     };
+    Scene.prototype.depthSort = function () {
+        var a = null;
+        var b = null;
+        for (var i = 0; i < this.numChildren; i++) {
+            a = this.getChildAt(i);
+            for (var j = i + 1; j < this.numChildren; j++) {
+                b = this.getChildAt(j);
+                if (a.bottom < b.bottom) {
+                    this._drawList[i] = b;
+                    this._drawList[j] = a;
+                    a = b;
+                }
+            }
+        }
+    };
+    Scene.prototype.swapChildren = function (child1, child2) {
+        var _this = this;
+        var index1 = -1;
+        var index2 = -1;
+        this._drawList.forEach(function (child, index) {
+            if (child === child1) {
+                index1 === index;
+            }
+            else if (child === child2) {
+                index2 === index;
+            }
+            if (index1 > -1 && index2 > -1) {
+                return _this.swapChildrenAt(index1, index2);
+            }
+        });
+        return false;
+    };
+    Scene.prototype.swapChildrenAt = function (index1, index2) {
+        var a = this.getChildAt(index1);
+        var b = this.getChildAt(index2);
+        if (a && b) {
+            this._drawList[index1] = b;
+            this._drawList[index2] = a;
+            return true;
+        }
+        return false;
+    };
     Scene.prototype.containsChild = function (target) {
         return target.id in this._childIDs;
     };
@@ -70,6 +112,13 @@ var Scene = (function () {
             }
         });
         return -1;
+    };
+    Scene.prototype.forEachChild = function (fn) {
+        var i = 0;
+        for (var _i = 0, _a = this._drawList; _i < _a.length; _i++) {
+            var object = _a[_i];
+            fn(object, i++);
+        }
     };
     Scene.prototype.getChildById = function (id) {
         return this._childIDs[id] || null;

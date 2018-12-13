@@ -20,10 +20,13 @@ var CollisionGrid = (function () {
         }
         return null;
     };
+    CollisionGrid.prototype.getObjectAtPixels = function (x, y) {
+        var row = Math.round(x / this._tileSize);
+        var col = Math.round(y / this._tileSize);
+        return this.getObjectAt(row, col);
+    };
     CollisionGrid.prototype.getObjectAtPoint = function (point) {
-        var x = Math.round(point.x / this._tileSize);
-        var y = Math.round(point.y / this._tileSize);
-        return this.getObjectAt(x, y);
+        return this.getObjectAtPixels(point.x, point.y);
     };
     return CollisionGrid;
 }());

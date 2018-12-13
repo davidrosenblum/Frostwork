@@ -21,6 +21,7 @@ var MapUtils = (function () {
                         tile.y -= (tile.height - tileSize);
                     }
                     grid.storeObjectAt(tile, x, y);
+                    config.scene.addChild(tile);
                 }
             });
         });

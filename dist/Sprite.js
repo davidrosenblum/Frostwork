@@ -53,11 +53,8 @@ var Object2D_1 = require("./Object2D");
 var Sprite = (function (_super) {
     __extends(Sprite, _super);
     function Sprite(image, width, height, x, y) {
-        if (width === void 0) { width = 0; }
-        if (height === void 0) { height = 0; }
-        var _this = _super.call(this, x, y) || this;
+        var _this = _super.call(this, width, height, x, y) || this;
         _this._image = Sprite.EMPTY_IMAGE;
-        _this._size = { width: width, height: height, depth: height - width };
         _this._collisionBounds = null;
         if (image)
             _this.setImage(image);
@@ -102,33 +99,41 @@ var Sprite = (function (_super) {
             });
         });
     };
-    Sprite.prototype.hitBoxTest = function (targets) {
+    Sprite.prototype.hitBoxTest = function (target) {
+        if (this.x < target.right && target.x < this.right) {
+            if (this.y < target.bottom && target.y < this.bottom) {
+                return true;
+            }
+        }
+        return false;
+    };
+    Sprite.prototype.hitBoxTests = function (targets) {
         for (var _i = 0, targets_1 = targets; _i < targets_1.length; _i++) {
             var target = targets_1[_i];
-            if (this.x < target.right && target.x < this.right) {
-                if (this.y < target.front && target.y < this.front) {
-                    return target;
-                }
+            if (this.hitBoxTest(target)) {
+                return target;
             }
         }
         return null;
     };
-    Sprite.prototype.collisionTest = function (targets) {
+    Sprite.prototype.collisionTest = function (target) {
         var bounds1 = this._collisionBounds;
-        var bounds2 = null;
+        var bounds2 = target.collisionBounds;
+        if (this.x < target.x + bounds2.width && target.x < this.x + bounds1.width) {
+            if (this.y < target.y + bounds2.height - bounds2.depth && target.y < this.y + bounds1.height - bounds1.depth) {
+                return true;
+            }
+        }
+        return false;
+    };
+    Sprite.prototype.collisionTests = function (targets) {
         for (var _i = 0, targets_2 = targets; _i < targets_2.length; _i++) {
             var target = targets_2[_i];
-            bounds2 = target.collisionBounds;
-            if (this.x < target.x + bounds2.width && target.x < this.x + bounds1.width) {
-                if (this.y < target.y + bounds2.height && target.y < this.y + bounds1.height) {
-                    return target;
-                }
+            if (this.collisionTest(target)) {
+                return target;
             }
         }
         return null;
-    };
-    Sprite.prototype.setSize = function (width, height, depth) {
-        this._size = { width: width, height: height, depth: depth || height - width };
     };
     Sprite.prototype.setCustomCollisionBounds = function (width, height, depth) {
         this._collisionBounds = { width: width, height: height, depth: depth || height - width };
@@ -136,68 +141,9 @@ var Sprite = (function (_super) {
     Sprite.prototype.useDefaultCollisionBounds = function () {
         this._collisionBounds = null;
     };
-    Object.defineProperty(Sprite.prototype, "depth", {
-        get: function () {
-            return this._size.depth;
-        },
-        set: function (depth) {
-            this._size.depth = depth;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Sprite.prototype, "collisionBounds", {
         get: function () {
-            return this._collisionBounds || this._size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "centerX", {
-        get: function () {
-            return this.x + this.width / 2;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "centerY", {
-        get: function () {
-            return this.y + this.height / 2;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "right", {
-        get: function () {
-            return this.x + this.width;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "front", {
-        get: function () {
-            return this.bottom - this.depth;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "bottom", {
-        get: function () {
-            return this.y + this.height;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "width", {
-        get: function () {
-            return this._size.width;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Sprite.prototype, "height", {
-        get: function () {
-            return this._size.height;
+            return this._collisionBounds || this.size;
         },
         enumerable: true,
         configurable: true

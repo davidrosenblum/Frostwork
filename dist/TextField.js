@@ -87,6 +87,41 @@ var TextField = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TextField.prototype, "width", {
+        get: function () {
+            TextField.CTX.font = this.font;
+            return TextField.CTX.measureText(this.text).width;
+        },
+        set: function (width) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "height", {
+        get: function () {
+            return parseFloat(this.font) || 0;
+        },
+        set: function (height) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "right", {
+        get: function () {
+            return this.x + this.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "bottom", {
+        get: function () {
+            return this.y + this.height;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TextField.CANVAS = document.createElement("canvas");
+    TextField.CTX = TextField.CANVAS.getContext("2d");
     TextField.defaultFont = "15px calibri";
     TextField.defaultStrokeColor = "black";
     TextField.defaultFillColor = "white";
