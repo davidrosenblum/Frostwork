@@ -74,7 +74,7 @@ var Scene = (function () {
             a = this.getChildAt(i);
             for (var j = i + 1; j < this.numChildren; j++) {
                 b = this.getChildAt(j);
-                if (a.bottom < b.bottom) {
+                if (a.bottom > b.bottom) {
                     this._drawList[i] = b;
                     this._drawList[j] = a;
                     a = b;

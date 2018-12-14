@@ -11,29 +11,32 @@ export class MapUtils{
 
         let grid:CollisionGrid<Sprite> = new CollisionGrid<Sprite>(rows, cols, tileSize);
 
-        tileLayout.forEach((row, y) => {
-            row.forEach((col, x) => {
-                let typeID:number = tileLayout[y][x] || -1;
+        for(let row:number = 0; row < tileLayout.length; row++){
+            for(let col:number = 0; col < tileLayout[row].length; col++){
+
+                let typeID:number = tileLayout[row][col] || -1;
                 let type:(typeof Sprite) = tileTypes[typeID] || null;
 
                 if(type){
                     let tile:Sprite = new type();
 
-                    tile.x = x * tileSize;
-                    tile.y = y * tileSize;
+                    tile.x = col * tileSize;
+                    tile.y = row * tileSize;
 
                     if(tile.height > tileSize){
                         tile.y -= (tile.height - tileSize);
                     }
 
-                    grid.storeObjectAt(tile, x, y);
+                    grid.storeObjectAt(tile, row, col);
 
                     if(config.scene){
                         config.scene.addChild(tile);   
                     }
                 }
-            });
-        });
+            }
+        }
+
+        console.log(grid);
 
         return grid;
     }

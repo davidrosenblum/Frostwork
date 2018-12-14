@@ -158,11 +158,12 @@ var GameEntity = (function (_super) {
             return this._facing;
         },
         set: function (facing) {
-            if (this._facing !== facing) {
-                this.emit("facing");
-            }
+            var oldFacing = this._facing;
             this._facing = facing;
             this.restartAnimation();
+            if (oldFacing !== facing) {
+                this.emit("facing");
+            }
         },
         enumerable: true,
         configurable: true

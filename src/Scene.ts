@@ -96,7 +96,7 @@ export class Scene implements Draw2D{
             for(let j:number = i + 1; j < this.numChildren; j++){
                 b = this.getChildAt(j);
 
-                if(a.bottom < b.bottom){
+                if(a.bottom > b.bottom){
                     this._drawList[i] = b;
                     this._drawList[j] = a;
 

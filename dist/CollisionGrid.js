@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CollisionGrid = (function () {
     function CollisionGrid(rows, cols, tileSize) {
         this._tileSize = tileSize;
-        this._grid = new Array(rows).fill(new Array(cols));
+        this._grid = new Array(rows);
+        for (var i = 0; i < cols; i++) {
+            this._grid[i] = new Array(cols);
+        }
     }
     CollisionGrid.prototype.checkInBounds = function (row, col) {
         return (row >= 0 && row < this._grid[0].length) &&

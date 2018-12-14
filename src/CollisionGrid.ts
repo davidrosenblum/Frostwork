@@ -7,7 +7,11 @@ export class CollisionGrid<T>{
     constructor(rows:number, cols:number, tileSize:number){
         this._tileSize = tileSize;
 
-        this._grid = new Array<T[]>(rows).fill(new Array<T>(cols));
+        //this._grid = new Array<T[]>(rows).fill(new Array<T>(cols).fill(null)); << errors?
+        this._grid = new Array<T[]>(rows);
+        for(let i:number = 0; i < cols; i++){
+            this._grid[i] = new Array<T>(cols);
+        }
     }
 
     public checkInBounds(row:number, col:number):boolean{

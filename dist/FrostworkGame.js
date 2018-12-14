@@ -42,6 +42,7 @@ var FrostworkGame = (function (_super) {
     FrostworkGame.prototype.update = function () {
         if (this._player) {
             this._playerMovement.updatePlayerMovement(this._keyWatcher, this._player, this._collisionGrid, this._bounds, this._scroller);
+            this._layers.container.scene.getChildAt(1).scene.depthSort();
         }
         this.emit("update");
     };

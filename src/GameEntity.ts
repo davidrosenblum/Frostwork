@@ -176,12 +176,14 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public set facing(facing:GameEntityFacing){
-        if(this._facing !== facing){
-            this.emit("facing");
-        }
-        
+        let oldFacing:string = this._facing;
+
         this._facing = facing;
         this.restartAnimation();
+
+        if(oldFacing !== facing){
+            this.emit("facing");
+        }
     }
 
     public get moveSpeed():number{

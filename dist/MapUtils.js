@@ -9,24 +9,25 @@ var MapUtils = (function () {
         var rows = tileLayout[0].length;
         var cols = tileLayout.length;
         var grid = new CollisionGrid_1.CollisionGrid(rows, cols, tileSize);
-        tileLayout.forEach(function (row, y) {
-            row.forEach(function (col, x) {
-                var typeID = tileLayout[y][x] || -1;
+        for (var row = 0; row < tileLayout.length; row++) {
+            for (var col = 0; col < tileLayout[row].length; col++) {
+                var typeID = tileLayout[row][col] || -1;
                 var type = tileTypes[typeID] || null;
                 if (type) {
                     var tile = new type();
-                    tile.x = x * tileSize;
-                    tile.y = y * tileSize;
+                    tile.x = col * tileSize;
+                    tile.y = row * tileSize;
                     if (tile.height > tileSize) {
                         tile.y -= (tile.height - tileSize);
                     }
-                    grid.storeObjectAt(tile, x, y);
+                    grid.storeObjectAt(tile, row, col);
                     if (config.scene) {
                         config.scene.addChild(tile);
                     }
                 }
-            });
-        });
+            }
+        }
+        console.log(grid);
         return grid;
     };
     return MapUtils;

@@ -10,6 +10,7 @@ import { SortableDraw2D, GameMapConfig, GameMapLayerConfig, MapConfig, Bounds, G
 import { Renderer } from "./Renderer";
 import { Scroller } from "./Scroller";
 import { Sprite } from "./Sprite";
+import { Object2D } from "./Object2D";
 
 export class FrostworkGame extends EventEmitter{
     private _renderer:Renderer;
@@ -50,6 +51,7 @@ export class FrostworkGame extends EventEmitter{
     private update():void{
         if(this._player){
             this._playerMovement.updatePlayerMovement(this._keyWatcher, this._player, this._collisionGrid, this._bounds, this._scroller);
+            (this._layers.container.scene.getChildAt(1) as Object2D).scene.depthSort();
         }
 
         this.emit("update");
