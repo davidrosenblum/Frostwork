@@ -55,7 +55,6 @@ var Sprite = (function (_super) {
     function Sprite(image, width, height, x, y) {
         var _this = _super.call(this, width, height, x, y) || this;
         _this._image = Sprite.EMPTY_IMAGE;
-        _this._collisionBounds = null;
         if (image)
             _this.setImage(image);
         return _this;
@@ -81,42 +80,6 @@ var Sprite = (function (_super) {
             this.drawChildren(ctx, x, y);
         }
     };
-    Sprite.prototype.hitBoxTest = function (target) {
-        if (this.x < target.right && target.x < this.right) {
-            if (this.y < target.bottom && target.y < this.bottom) {
-                return true;
-            }
-        }
-        return false;
-    };
-    Sprite.prototype.hitBoxTests = function (targets) {
-        for (var _i = 0, targets_1 = targets; _i < targets_1.length; _i++) {
-            var target = targets_1[_i];
-            if (this.hitBoxTest(target)) {
-                return target;
-            }
-        }
-        return null;
-    };
-    Sprite.prototype.collisionTest = function (target) {
-        var bounds1 = this._collisionBounds;
-        var bounds2 = target.collisionBounds;
-        if (this.x < target.x + bounds2.width && target.x < this.x + bounds1.width) {
-            if (this.y < target.y + bounds2.height - bounds2.depth && target.y < this.y + bounds1.height - bounds1.depth) {
-                return true;
-            }
-        }
-        return false;
-    };
-    Sprite.prototype.collisionTests = function (targets) {
-        for (var _i = 0, targets_2 = targets; _i < targets_2.length; _i++) {
-            var target = targets_2[_i];
-            if (this.collisionTest(target)) {
-                return target;
-            }
-        }
-        return null;
-    };
     Sprite.prototype.setImage = function (url) {
         return __awaiter(this, void 0, void 0, function () {
             var img, err_1;
@@ -138,19 +101,6 @@ var Sprite = (function (_super) {
             });
         });
     };
-    Sprite.prototype.setCustomCollisionBounds = function (width, height, depth) {
-        this._collisionBounds = { width: width, height: height, depth: depth || height - width };
-    };
-    Sprite.prototype.useDefaultCollisionBounds = function () {
-        this._collisionBounds = null;
-    };
-    Object.defineProperty(Sprite.prototype, "collisionBounds", {
-        get: function () {
-            return this._collisionBounds || this.size;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Sprite.prototype, "imageElement", {
         get: function () {
             return this._image;

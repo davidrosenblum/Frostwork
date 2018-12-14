@@ -42,6 +42,8 @@ export class FrostworkGame extends EventEmitter{
         this._initialized = false;
 
         this.setMapBounds(0, 0, width, height);
+
+        this.on("render", this.update.bind(this));
     }
 
     private update():void{
@@ -97,31 +99,40 @@ export class FrostworkGame extends EventEmitter{
         // game must be initialized
         if(this.isInitialized){
             // layer must exist
-            if(layer in this._layers){
-                return this._layers[layer].scene.addChild(object);
+            if(layer in this._layers.layers){
+                // add
+                return this._layers.layers[layer].scene.addChild(object);
             }
             else throw new Error("INVALID_LAYER: Layer ID is not valid."); 
         }
-        else throw new Error("GAME_NOT_STARTED: Game can only add objects after it has been started.");
+        else throw new Error("GAME_NOT_INIT: Game can only add objects after it has been initialized.");
     }
 
     public remove(target:SortableDraw2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
         // game must be initialized
         if(this.isInitialized){
             // layer must exist
-            if(layer in this._layers){
-                return this._layers[layer].scene.removeChild(target) !== null;
+            if(layer in this._layers.layers){
+                // remove
+                return this._layers.layers[layer].scene.removeChild(target) !== null;
             }
             else throw new Error("INVALID_LAYER: Layer ID is not valid.");
         }
-        else throw new Error("GAME_NOT_STARTED: Game can only remove objects after it has been started.");
+        else throw new Error("GAME_NOT_INIT: Game can only remove objects after it has been initialized.");
     }
 
-    public setMap(config:GameMapConfig):void{
+    public setMap(config:GameMapConfig, autoSetMapBounds:boolean=true):void{
+        // create an array of the layers
         let layerConfigs:GameMapLayerConfig[] = [config.background || null, config.midground || null, config.foreground || null];
+
+        // default map width/height
+        let mapWidth:number = 0;
+        let mapHeight:number = 0;
         
         layerConfigs.forEach((layerConfig, index) => {
+            // skip not provided (null) layers
             if(layerConfig){
+                // create map config for each layer 
                 let mapConfig:MapConfig = {
                     tileLayout: layerConfig.tileLayout,
                     tileTypes:  layerConfig.tileTypes,
@@ -130,13 +141,23 @@ export class FrostworkGame extends EventEmitter{
                     offsetY:    layerConfig.offsetY,
                     scene:      this._layers.layers[index + 1].scene
                 };
+
+                // increase map bounds if neccessary 
+                mapWidth = Math.max(layerConfig.tileLayout[0].length, mapWidth);
+                mapHeight = Math.max(layerConfig.tileLayout.length, mapHeight);
     
+                // set collision grid to the midground 
                 let collisionGrid:CollisionGrid<Sprite> = MapUtils.buildGrid(mapConfig);
                 if(layerConfig === config.midground){
                     this._collisionGrid = collisionGrid;
                 }
             }
         });
+
+        // apply map bounds (optional)
+        if(autoSetMapBounds){
+            this.setMapBounds(0, 0, mapWidth, mapHeight);
+        }
     }
 
     public setMapBounds(x:number=0, y:number=0, width:number=-1, height:number=-1):void{
@@ -158,6 +179,11 @@ export class FrostworkGame extends EventEmitter{
         this._renderer.injectInto(element);
     }
 
+    public set player(player:GameEntity){
+        this._player = player;
+        this.add(player);
+    }
+
     public get canvasWidth():number{
         return this._renderer.canvasWidth;
     }
@@ -176,6 +202,10 @@ export class FrostworkGame extends EventEmitter{
 
     public get mapBounds():Bounds{
         return this._bounds;
+    }
+
+    public get player():GameEntity{
+        return this._player;
     }
 
     public get isInitialized():boolean{

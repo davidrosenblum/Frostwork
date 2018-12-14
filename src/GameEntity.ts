@@ -1,13 +1,15 @@
 import { AnimatedSprite } from "./AnimatedSprite";
 import { CollisionGrid } from "./CollisionGrid";
 import { GameEntityFacing } from "./Enums";
-import { CollisionObject, Bounds } from "./Interfaces";
+import { Bounds } from "./Interfaces";
 import { Scroller } from "./Scroller";
 import { Sprite } from "./Sprite";
+import { TextField } from "./TextField";
 
 export class GameEntity extends AnimatedSprite{
     private _moveSpeed:number;
     private _facing:GameEntityFacing;
+    private _nametag:TextField;
     public canMove:boolean;
 
     constructor(image?:string, width?:number, height?:number, x?:number, y?:number){
@@ -24,6 +26,17 @@ export class GameEntity extends AnimatedSprite{
             return this.collisionTest(hit) ? hit : null;
         }
         return null;
+    }
+
+    public setNametag(name?:string, font?:string, fillStyle?:string, strokeStyle?:string):void{
+        if(this._nametag){
+            this._nametag.remove();
+        }
+
+        if(name){
+            this._nametag = new TextField(name, 0, 0, font, fillStyle, strokeStyle);
+            this.scene.addChild(this._nametag);
+        }
     }
 
     public move(grid?:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):void{
@@ -46,6 +59,8 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public moveUp(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        if(!this.canMove) return null;
+
         let y:number = this.y - this.moveSpeed;
 
         if(grid){
@@ -68,6 +83,8 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public moveDown(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        if(!this.canMove) return null;
+
         let y:number = this.y - this.moveSpeed;
 
         if(grid){
@@ -93,6 +110,8 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public moveLeft(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        if(!this.canMove) return null;
+
         let x:number = this.x - this.moveSpeed;
 
         if(grid){
@@ -115,6 +134,8 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public moveRight(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
+        if(!this.canMove) return null;
+
         let x:number = this.x + this.moveSpeed;
 
         if(grid){

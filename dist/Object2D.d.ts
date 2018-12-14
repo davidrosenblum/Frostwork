@@ -1,36 +1,21 @@
-import { EventEmitter } from "./EventEmitter";
-import { Draw2D, Point, Size, SortableDraw2D } from "./Interfaces";
+import { DisplayObject } from "./DisplayObject";
+import { Size, SortableDraw2D } from "./Interfaces";
 import { Scene } from "./Scene";
-export declare abstract class Object2D extends EventEmitter implements Draw2D, SortableDraw2D {
-    private static tokens;
-    private _id;
-    private _position;
-    private _size;
+export declare abstract class Object2D extends DisplayObject implements SortableDraw2D {
+    private _collisionBounds;
     private _scene;
     private _parent;
-    private _alpha;
-    visible: boolean;
     constructor(width?: number, height?: number, x?: number, y?: number);
-    abstract draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
     protected drawChildren(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
+    hitBoxTest(target: Object2D): boolean;
+    hitBoxTests(targets: Object2D[]): Object2D;
+    collisionTest(target: Object2D): boolean;
+    collisionTests(targets: Object2D[]): Object2D;
+    setCustomCollisionBounds(width: number, height: number, depth?: number): void;
+    useDefaultCollisionBounds(): void;
     setParent(parent: Object2D): void;
-    setPosition(x: number, y: number): void;
-    setSize(width: number, height: number, depth?: number): void;
     remove(): void;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    depth: number;
-    alpha: number;
-    readonly position: Point;
-    readonly size: Size;
-    readonly centerX: number;
-    readonly centerY: number;
-    readonly right: number;
-    readonly front: number;
-    readonly bottom: number;
+    readonly collisionBounds: Size;
     readonly scene: Scene;
-    readonly id: string;
     readonly parent: Object2D;
 }

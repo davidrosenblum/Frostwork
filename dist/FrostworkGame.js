@@ -35,6 +35,7 @@ var FrostworkGame = (function (_super) {
         _this._scroller = null;
         _this._initialized = false;
         _this.setMapBounds(0, 0, width, height);
+        _this.on("render", _this.update.bind(_this));
         return _this;
     }
     FrostworkGame.prototype.update = function () {
@@ -84,30 +85,33 @@ var FrostworkGame = (function (_super) {
     FrostworkGame.prototype.add = function (object, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
         if (this.isInitialized) {
-            if (layer in this._layers) {
-                return this._layers[layer].scene.addChild(object);
+            if (layer in this._layers.layers) {
+                return this._layers.layers[layer].scene.addChild(object);
             }
             else
                 throw new Error("INVALID_LAYER: Layer ID is not valid.");
         }
         else
-            throw new Error("GAME_NOT_STARTED: Game can only add objects after it has been started.");
+            throw new Error("GAME_NOT_INIT: Game can only add objects after it has been initialized.");
     };
     FrostworkGame.prototype.remove = function (target, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
         if (this.isInitialized) {
-            if (layer in this._layers) {
-                return this._layers[layer].scene.removeChild(target) !== null;
+            if (layer in this._layers.layers) {
+                return this._layers.layers[layer].scene.removeChild(target) !== null;
             }
             else
                 throw new Error("INVALID_LAYER: Layer ID is not valid.");
         }
         else
-            throw new Error("GAME_NOT_STARTED: Game can only remove objects after it has been started.");
+            throw new Error("GAME_NOT_INIT: Game can only remove objects after it has been initialized.");
     };
-    FrostworkGame.prototype.setMap = function (config) {
+    FrostworkGame.prototype.setMap = function (config, autoSetMapBounds) {
         var _this = this;
+        if (autoSetMapBounds === void 0) { autoSetMapBounds = true; }
         var layerConfigs = [config.background || null, config.midground || null, config.foreground || null];
+        var mapWidth = 0;
+        var mapHeight = 0;
         layerConfigs.forEach(function (layerConfig, index) {
             if (layerConfig) {
                 var mapConfig = {
@@ -118,12 +122,17 @@ var FrostworkGame = (function (_super) {
                     offsetY: layerConfig.offsetY,
                     scene: _this._layers.layers[index + 1].scene
                 };
+                mapWidth = Math.max(layerConfig.tileLayout[0].length, mapWidth);
+                mapHeight = Math.max(layerConfig.tileLayout.length, mapHeight);
                 var collisionGrid = MapUtils_1.MapUtils.buildGrid(mapConfig);
                 if (layerConfig === config.midground) {
                     _this._collisionGrid = collisionGrid;
                 }
             }
         });
+        if (autoSetMapBounds) {
+            this.setMapBounds(0, 0, mapWidth, mapHeight);
+        }
     };
     FrostworkGame.prototype.setMapBounds = function (x, y, width, height) {
         if (x === void 0) { x = 0; }
@@ -145,6 +154,17 @@ var FrostworkGame = (function (_super) {
     FrostworkGame.prototype.injectInto = function (element) {
         this._renderer.injectInto(element);
     };
+    Object.defineProperty(FrostworkGame.prototype, "player", {
+        get: function () {
+            return this._player;
+        },
+        set: function (player) {
+            this._player = player;
+            this.add(player);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(FrostworkGame.prototype, "canvasWidth", {
         get: function () {
             return this._renderer.canvasWidth;

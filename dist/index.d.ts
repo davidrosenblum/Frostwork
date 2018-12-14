@@ -1,9 +1,11 @@
 export { AnimatedSprite } from "./AnimatedSprite";
 export { AnimationUtils } from "./AnimationUtils";
 export { AssetUtils } from "./AssetUtils";
+export { BoundingBox } from "./BoundingBox";
 export { Clock } from "./Clock";
 export { CollisionGrid } from "./CollisionGrid";
 export { AUTHOR, VERSION } from "./Constants";
+export { DisplayObject } from "./DisplayObject";
 export * from "./Enums";
 export { EventEmitter } from "./EventEmitter";
 export { FrostworkGame } from "./FrostworkGame";

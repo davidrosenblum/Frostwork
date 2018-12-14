@@ -25,13 +25,6 @@ export interface Bounds {
 export interface Draw2D {
     draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
 }
-export interface CollisionObject {
-    hitBoxTest(target: CollisionObject): boolean;
-    collisionTest(target: CollisionObject): boolean;
-    hitBoxTests(target: CollisionObject[]): CollisionObject;
-    collisionTests(target: CollisionObject[]): CollisionObject;
-    collisionBounds: Size;
-}
 export interface SortableDraw2D extends Draw2D {
     id: string;
     bottom: number;

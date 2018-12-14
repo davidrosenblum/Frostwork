@@ -1,5 +1,6 @@
 import { GameLayer } from "./Enums";
 import { EventEmitter } from "./EventEmitter";
+import { GameEntity } from "./GameEntity";
 import { KeyboardWatcher } from "./KeyboardWatcher";
 import { SortableDraw2D, GameMapConfig, Bounds } from "./Interfaces";
 export declare class FrostworkGame extends EventEmitter {
@@ -21,11 +22,12 @@ export declare class FrostworkGame extends EventEmitter {
     stop(): void;
     add(object: SortableDraw2D, layer?: GameLayer): boolean;
     remove(target: SortableDraw2D, layer?: GameLayer): boolean;
-    setMap(config: GameMapConfig): void;
+    setMap(config: GameMapConfig, autoSetMapBounds?: boolean): void;
     setMapBounds(x?: number, y?: number, width?: number, height?: number): void;
     removeAllChildren(): void;
     resize(width: number, height: number): void;
     injectInto(element: HTMLElement | string): void;
+    player: GameEntity;
     readonly canvasWidth: number;
     readonly canvasHeight: number;
     readonly canvas: HTMLCanvasElement;

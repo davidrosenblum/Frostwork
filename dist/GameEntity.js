@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimatedSprite_1 = require("./AnimatedSprite");
 var Enums_1 = require("./Enums");
+var TextField_1 = require("./TextField");
 var GameEntity = (function (_super) {
     __extends(GameEntity, _super);
     function GameEntity(image, width, height, x, y) {
@@ -30,6 +31,15 @@ var GameEntity = (function (_super) {
             return this.collisionTest(hit) ? hit : null;
         }
         return null;
+    };
+    GameEntity.prototype.setNametag = function (name, font, fillStyle, strokeStyle) {
+        if (this._nametag) {
+            this._nametag.remove();
+        }
+        if (name) {
+            this._nametag = new TextField_1.TextField(name, 0, 0, font, fillStyle, strokeStyle);
+            this.scene.addChild(this._nametag);
+        }
     };
     GameEntity.prototype.move = function (grid, bounds, scroller) {
         if (this.canMove) {
@@ -50,6 +60,8 @@ var GameEntity = (function (_super) {
         }
     };
     GameEntity.prototype.moveUp = function (grid, bounds, scroller) {
+        if (!this.canMove)
+            return null;
         var y = this.y - this.moveSpeed;
         if (grid) {
             var hit = grid.getObjectAtPixels(this.x, y);
@@ -66,6 +78,8 @@ var GameEntity = (function (_super) {
         return null;
     };
     GameEntity.prototype.moveDown = function (grid, bounds, scroller) {
+        if (!this.canMove)
+            return null;
         var y = this.y - this.moveSpeed;
         if (grid) {
             var hit = grid.getObjectAtPixels(this.x, y + this.height);
@@ -85,6 +99,8 @@ var GameEntity = (function (_super) {
         return null;
     };
     GameEntity.prototype.moveLeft = function (grid, bounds, scroller) {
+        if (!this.canMove)
+            return null;
         var x = this.x - this.moveSpeed;
         if (grid) {
             var hit = grid.getObjectAtPixels(x, this.y);
@@ -101,6 +117,8 @@ var GameEntity = (function (_super) {
         return null;
     };
     GameEntity.prototype.moveRight = function (grid, bounds, scroller) {
+        if (!this.canMove)
+            return null;
         var x = this.x + this.moveSpeed;
         if (grid) {
             var hit = grid.getObjectAtPixels(x, this.bottom);
