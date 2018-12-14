@@ -20,7 +20,7 @@ var AssetUtils = (function () {
             image.setAttribute("src", url);
         });
     };
-    AssetUtils.loadAudio = function (url) {
+    AssetUtils.loadSound = function (url) {
         if (url in AssetUtils.sounds) {
             return Promise.resolve(AssetUtils.sounds[url]);
         }
@@ -38,6 +38,8 @@ var AssetUtils = (function () {
         });
     };
     AssetUtils.loadImages = function (urls) {
+        if (urls.length === 0)
+            return Promise.resolve({ loaded: 0, errors: 0 });
         return new Promise(function (resolve) {
             var loaded = 0;
             var errors = 0;
@@ -53,12 +55,14 @@ var AssetUtils = (function () {
             });
         });
     };
-    AssetUtils.loadAudios = function (urls) {
+    AssetUtils.loadSounds = function (urls) {
+        if (urls.length === 0)
+            return Promise.resolve({ loaded: 0, errors: 0 });
         return new Promise(function (resolve) {
             var loaded = 0;
             var errors = 0;
             urls.forEach(function (url) {
-                AssetUtils.loadAudio(url)
+                AssetUtils.loadSound(url)
                     .then(function () { return ++loaded; })
                     .catch(function () { return ++errors; })
                     .then(function () {
@@ -68,6 +72,57 @@ var AssetUtils = (function () {
                 });
             });
         });
+    };
+    AssetUtils.loadAliases = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            var imageUrls = [];
+            Object.keys(AssetUtils.imageAliases).forEach(function (alias) { return imageUrls.push(AssetUtils.imageAliases[alias]); });
+            var soundUrls = [];
+            Object.keys(AssetUtils.soundAliases).forEach(function (alias) { return soundUrls.push(AssetUtils.soundAliases[alias]); });
+            var imageReport = null;
+            var soundReport = null;
+            _this.loadImages(imageUrls).then(function (report) {
+                imageReport = report;
+                if (soundReport)
+                    resolve({ sounds: soundReport, images: imageReport });
+            });
+            _this.loadSounds(soundUrls).then(function (report) {
+                soundReport = report;
+                if (imageReport)
+                    resolve({ sounds: soundReport, images: imageReport });
+            });
+        });
+    };
+    AssetUtils.setImageAlias = function (alias, url) {
+        AssetUtils.imageAliases[alias] = url;
+    };
+    AssetUtils.setSoundAlias = function (alias, url) {
+        AssetUtils.soundAliases[alias] = url;
+    };
+    AssetUtils.setImageAliasMany = function (aliases) {
+        for (var alias in aliases) {
+            AssetUtils.setImageAlias(alias, aliases[alias]);
+        }
+    };
+    AssetUtils.setSoundAliasMany = function (aliases) {
+        for (var alias in aliases) {
+            AssetUtils.setSoundAlias(alias, aliases[alias]);
+        }
+    };
+    AssetUtils.getImageURLByAlias = function (alias) {
+        return AssetUtils.imageAliases[alias] || null;
+    };
+    AssetUtils.getSoundURLByAlias = function (alias) {
+        return AssetUtils.soundAliases[alias] || null;
+    };
+    AssetUtils.getImageByAlias = function (alias) {
+        var url = AssetUtils.imageAliases[alias] || null;
+        return url ? AssetUtils.getImage(url) : null;
+    };
+    AssetUtils.getAudioByAlias = function (alias) {
+        var url = AssetUtils.soundAliases[alias] || null;
+        return url ? AssetUtils.getAudio(url) : null;
     };
     AssetUtils.getImage = function (url) {
         return AssetUtils.images[url] || null;
@@ -79,6 +134,8 @@ var AssetUtils = (function () {
     AssetUtils.sounds = {};
     AssetUtils.loadingImages = {};
     AssetUtils.loadingSounds = {};
+    AssetUtils.imageAliases = {};
+    AssetUtils.soundAliases = {};
     return AssetUtils;
 }());
 exports.AssetUtils = AssetUtils;

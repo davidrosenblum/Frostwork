@@ -27,8 +27,30 @@ var MapUtils = (function () {
                 }
             }
         }
-        console.log(grid);
         return grid;
+    };
+    MapUtils.buildLayerMap = function (config, backgroundScene, midgroundScene, foregroundScene) {
+        if (backgroundScene === void 0) { backgroundScene = null; }
+        if (midgroundScene === void 0) { midgroundScene = null; }
+        if (foregroundScene === void 0) { foregroundScene = null; }
+        var collisionGrid = null;
+        var scenes = [backgroundScene, midgroundScene, foregroundScene];
+        var layerConfigs = [config.background || null, config.midground || null, config.foreground || null];
+        layerConfigs.forEach(function (layerConfig, index) {
+            if (layerConfig) {
+                var cfg = {
+                    tileLayout: layerConfig.tileLayout,
+                    tileTypes: layerConfig.tileTypes,
+                    tileSize: config.tileSize,
+                    scene: index in scenes ? scenes[index] : null
+                };
+                var grid = MapUtils.buildGrid(cfg);
+                if (layerConfig === config.midground) {
+                    collisionGrid = grid;
+                }
+            }
+        });
+        return collisionGrid;
     };
     return MapUtils;
 }());
