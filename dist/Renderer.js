@@ -29,24 +29,30 @@ var Renderer = (function (_super) {
     Renderer.prototype.clear = function () {
         this._context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     };
-    Renderer.prototype.renderFrame = function (scene) {
+    Renderer.prototype.renderFrame = function () {
         this.emit("render");
         this.clear();
-        scene.draw(this._context, 0, 0);
+        this._scene.draw(this._context, 0, 0);
         if (this.isRendering) {
             requestAnimationFrame(this.renderFrame.bind(this));
         }
     };
     Renderer.prototype.startRendering = function (scene) {
         this._rendering = true;
-        this.renderFrame(scene);
+        this._scene = scene;
+        requestAnimationFrame(this.renderFrame.bind(this));
     };
     Renderer.prototype.stopRendering = function () {
         this._rendering = false;
+        this._scene = null;
     };
     Renderer.prototype.resize = function (width, height) {
         this._canvas.width = width;
         this._canvas.height = height;
+    };
+    Renderer.prototype.injectInto = function (element) {
+        var tag = (typeof element === "string") ? document.querySelector(element) : element;
+        tag.appendChild(this._canvas);
     };
     Object.defineProperty(Renderer.prototype, "canvasWidth", {
         get: function () {

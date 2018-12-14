@@ -4,6 +4,8 @@ var KeyboardWatcher = (function () {
     function KeyboardWatcher(element) {
         this._keys = {};
         this._numKeys = 0;
+        if (!element)
+            element = document.body;
         element.addEventListener("keyup", this.handleKeyUp.bind(this));
         element.addEventListener("keydown", this.handleKeyDown.bind(this));
     }

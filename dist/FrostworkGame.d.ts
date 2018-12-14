@@ -7,13 +7,15 @@ export declare class FrostworkGame extends EventEmitter {
     private _layers;
     private _keyWatcher;
     private _playerMovement;
+    private _clock;
     private _collisionGrid;
     private _bounds;
     private _scroller;
     private _player;
-    private _started;
+    private _initialized;
     constructor(width?: number, height?: number);
     private update;
+    init(): void;
     start(): void;
     togglePause(): void;
     stop(): void;
@@ -23,10 +25,11 @@ export declare class FrostworkGame extends EventEmitter {
     setMapBounds(x?: number, y?: number, width?: number, height?: number): void;
     removeAllChildren(): void;
     resize(width: number, height: number): void;
+    injectInto(element: HTMLElement | string): void;
     readonly canvasWidth: number;
     readonly canvasHeight: number;
     readonly canvas: HTMLCanvasElement;
     readonly keyWatcher: KeyboardWatcher;
     readonly mapBounds: Bounds;
-    readonly hasStarted: boolean;
+    readonly isInitialized: boolean;
 }

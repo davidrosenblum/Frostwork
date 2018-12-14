@@ -1,9 +1,9 @@
 import { EventEmitter } from "./EventEmitter";
-import { Draw2D, Point, Size } from "./Interfaces";
+import { Draw2D, Point, Size, SortableDraw2D } from "./Interfaces";
 import { Scene } from "./Scene";
 import { TokenGenerator } from "./TokenGenerator";
 
-export abstract class Object2D extends EventEmitter implements Draw2D{
+export abstract class Object2D extends EventEmitter implements Draw2D, SortableDraw2D{
     private static tokens:TokenGenerator = new TokenGenerator(16);
 
     private _id:string;
@@ -20,7 +20,7 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
         this._id = Object2D.tokens.nextToken();
         this._position = { x, y };
         this._size = { width, height, depth: height - width };
-        this._scene = new Scene();
+        this._scene = new Scene(this);
         this._parent = null;
         this._alpha = 1;
         this.visible = true;
@@ -32,8 +32,10 @@ export abstract class Object2D extends EventEmitter implements Draw2D{
         this._scene.draw(ctx, this.x + offsetX, this.y + offsetY);
     }
 
-    protected setParent(parent:Object2D):void{
-        this._parent = parent;
+    public setParent(parent:Object2D):void{
+        if(parent.scene.containsChild(this)){
+            this._parent = parent;
+        }
     }
 
     public setPosition(x:number, y:number):void{

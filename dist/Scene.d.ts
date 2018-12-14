@@ -1,9 +1,12 @@
 import { Draw2D, SortableDraw2D } from "./Interfaces";
+import { Object2D } from "./Object2D";
 export declare class Scene implements Draw2D {
     private _childIDs;
     private _drawList;
-    constructor();
+    private _wrappedObject;
+    constructor(wrap: Object2D);
     draw(ctx: CanvasRenderingContext2D, offsetX?: number, offsetY?: number): void;
+    private markChildAsMine;
     addChild(child: SortableDraw2D): boolean;
     addChildAt(child: SortableDraw2D, index: number): boolean;
     addChildren(children: SortableDraw2D[]): void;

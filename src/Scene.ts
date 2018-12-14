@@ -1,22 +1,31 @@
 import { Draw2D, SortableDraw2D } from "./Interfaces";
+import { Object2D } from "./Object2D";
 
 export class Scene implements Draw2D{
     private _childIDs:{[id:string]:SortableDraw2D};
     private _drawList:SortableDraw2D[];
+    private _wrappedObject:Object2D;
 
-    constructor(){
+    constructor(wrap:Object2D){
         this._childIDs = {};
         this._drawList = [];
+        this._wrappedObject = wrap;
     }
 
     public draw(ctx:CanvasRenderingContext2D, offsetX:number=0, offsetY:number=0):void{
         this._drawList.forEach(child => child.draw(ctx, offsetX, offsetY));
     }
 
+    private markChildAsMine(child:SortableDraw2D):void{
+        this._childIDs[child.id] = child;
+        this._drawList.push(child);
+
+        child.setParent(this._wrappedObject);
+    }
+
     public addChild(child:SortableDraw2D):boolean{
         if(!this.containsChild(child)){
-            this._childIDs[child.id] = child;
-            this._drawList.push(child);
+            this.markChildAsMine(child);
 
             return true;
         }
@@ -38,6 +47,8 @@ export class Scene implements Draw2D{
 
             this._drawList = updatedDrawList;
 
+            this.markChildAsMine(child);
+
             return true;
         }
         return false;
@@ -57,6 +68,8 @@ export class Scene implements Draw2D{
 
             delete this._childIDs[child.id];
             this._drawList.splice(index, 1);
+
+            child.setParent(null);
 
             return child;
         }

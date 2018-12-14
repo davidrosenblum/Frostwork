@@ -45,18 +45,6 @@ export class Sprite extends Object2D implements CollisionObject{
         }
     }
 
-    public async setImage(url:string):Promise<HTMLImageElement>{
-        try{
-            let img:HTMLImageElement = await AssetUtils.loadImage(url);
-            this._image = img;
-        }
-        catch(err){
-            this._image = Sprite.badImage || Sprite.EMPTY_IMAGE;
-        }
-
-        return this._image;
-    }
-
      // uses actual bounding box
     public hitBoxTest(target:Sprite):boolean{
         if(this.x < target.right && target.x < this.right){
@@ -98,6 +86,18 @@ export class Sprite extends Object2D implements CollisionObject{
             }
         }
         return null;
+    }
+
+    public async setImage(url:string):Promise<HTMLImageElement>{
+        try{
+            let img:HTMLImageElement = await AssetUtils.loadImage(url);
+            this._image = img;
+        }
+        catch(err){
+            this._image = Sprite.badImage || Sprite.EMPTY_IMAGE;
+        }
+
+        return this._image;
     }
 
     public setCustomCollisionBounds(width:number, height:number, depth?:number):void{

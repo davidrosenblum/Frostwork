@@ -81,27 +81,6 @@ var Sprite = (function (_super) {
             this.drawChildren(ctx, x, y);
         }
     };
-    Sprite.prototype.setImage = function (url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var img, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4, AssetUtils_1.AssetUtils.loadImage(url)];
-                    case 1:
-                        img = _a.sent();
-                        this._image = img;
-                        return [3, 3];
-                    case 2:
-                        err_1 = _a.sent();
-                        this._image = Sprite.badImage || Sprite.EMPTY_IMAGE;
-                        return [3, 3];
-                    case 3: return [2, this._image];
-                }
-            });
-        });
-    };
     Sprite.prototype.hitBoxTest = function (target) {
         if (this.x < target.right && target.x < this.right) {
             if (this.y < target.bottom && target.y < this.bottom) {
@@ -137,6 +116,27 @@ var Sprite = (function (_super) {
             }
         }
         return null;
+    };
+    Sprite.prototype.setImage = function (url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var img, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4, AssetUtils_1.AssetUtils.loadImage(url)];
+                    case 1:
+                        img = _a.sent();
+                        this._image = img;
+                        return [3, 3];
+                    case 2:
+                        err_1 = _a.sent();
+                        this._image = Sprite.badImage || Sprite.EMPTY_IMAGE;
+                        return [3, 3];
+                    case 3: return [2, this._image];
+                }
+            });
+        });
     };
     Sprite.prototype.setCustomCollisionBounds = function (width, height, depth) {
         this._collisionBounds = { width: width, height: height, depth: depth || height - width };

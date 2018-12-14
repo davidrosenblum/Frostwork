@@ -1,4 +1,5 @@
 import { CollisionGrid } from "./CollisionGrid";
+import { Clock } from "./Clock";
 import { GameLayer } from "./Enums";
 import { EventEmitter } from "./EventEmitter";
 import { GameEntity } from "./GameEntity";
@@ -14,11 +15,12 @@ export class FrostworkGame extends EventEmitter{
     private _layers:GameLayersHelper;
     private _keyWatcher:KeyboardWatcher;
     private _playerMovement:GamePlayerMovementHelper;
+    private _clock:Clock;
     private _collisionGrid:CollisionGrid<Sprite>;
     private _bounds:Bounds;
     private _scroller:Scroller;
     private _player:GameEntity;
-    private _started:boolean;
+    private _initialized:boolean;
 
     constructor(width?:number, height?:number){
         super();
@@ -30,13 +32,14 @@ export class FrostworkGame extends EventEmitter{
 
         this._keyWatcher = null;
         this._playerMovement = new GamePlayerMovementHelper();
+        this._clock = new Clock();
 
         this._collisionGrid = null;
         this._bounds = null;
 
         this._scroller = null;
 
-        this._started = false;
+        this._initialized = false;
 
         this.setMapBounds(0, 0, width, height);
     }
@@ -49,18 +52,26 @@ export class FrostworkGame extends EventEmitter{
         this.emit("update");
     }
 
-    public start():void{
-        if(!this.hasStarted){
+    public init():void{
+        if(!this.isInitialized){
             this._layers.createLayers();
             this._keyWatcher = new KeyboardWatcher();
             this._renderer.startRendering(this._layers.container.scene);
-            this._started = true;
+            this._initialized = true;
             this.emit("start");
         }
     }
 
+    public start():void{
+        if(this.isInitialized){
+            this._renderer.startRendering(this._layers.container.scene);
+            this.emit("start");
+        }
+        else throw new Error("INIT_ERR: Please initialize the game before starting by calling the .init() method.");
+    }
+
     public togglePause():void{
-        if(this.hasStarted){
+        if(this.isInitialized){
             if(this._renderer.isRendering){
                 this._renderer.stopRendering();
                 this.emit("pause");
@@ -73,8 +84,8 @@ export class FrostworkGame extends EventEmitter{
     }
 
     public stop():void{
-        if(this.hasStarted){
-            this._started = false;
+        if(this.isInitialized){
+            this._initialized = false;
             this._layers.destroyLayers();
             this._keyWatcher = null;
             this._renderer.stopRendering();
@@ -84,7 +95,7 @@ export class FrostworkGame extends EventEmitter{
 
     public add(object:SortableDraw2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
         // game must be initialized
-        if(this.hasStarted){
+        if(this.isInitialized){
             // layer must exist
             if(layer in this._layers){
                 return this._layers[layer].scene.addChild(object);
@@ -96,7 +107,7 @@ export class FrostworkGame extends EventEmitter{
 
     public remove(target:SortableDraw2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
         // game must be initialized
-        if(this.hasStarted){
+        if(this.isInitialized){
             // layer must exist
             if(layer in this._layers){
                 return this._layers[layer].scene.removeChild(target) !== null;
@@ -107,21 +118,23 @@ export class FrostworkGame extends EventEmitter{
     }
 
     public setMap(config:GameMapConfig):void{
-        let layerConfigs:GameMapLayerConfig[] = [config.background, config.midground, config.background];
+        let layerConfigs:GameMapLayerConfig[] = [config.background || null, config.midground || null, config.foreground || null];
         
         layerConfigs.forEach((layerConfig, index) => {
-            let mapConfig:MapConfig = {
-                tileLayout: layerConfig.tileLayout,
-                tileTypes:  layerConfig.tileTypes,
-                tileSize:   config.tileSize,
-                offsetX:    layerConfig.offsetX,
-                offsetY:    layerConfig.offsetY,
-                scene:      this._layers.layers[index].scene
-            };
-
-            let collisionGrid:CollisionGrid<Sprite> = MapUtils.buildGrid(mapConfig);
-            if(layerConfig === config.midground){
-                this._collisionGrid = collisionGrid;
+            if(layerConfig){
+                let mapConfig:MapConfig = {
+                    tileLayout: layerConfig.tileLayout,
+                    tileTypes:  layerConfig.tileTypes,
+                    tileSize:   config.tileSize,
+                    offsetX:    layerConfig.offsetX,
+                    offsetY:    layerConfig.offsetY,
+                    scene:      this._layers.layers[index + 1].scene
+                };
+    
+                let collisionGrid:CollisionGrid<Sprite> = MapUtils.buildGrid(mapConfig);
+                if(layerConfig === config.midground){
+                    this._collisionGrid = collisionGrid;
+                }
             }
         });
     }
@@ -139,6 +152,10 @@ export class FrostworkGame extends EventEmitter{
 
     public resize(width:number, height:number):void{
         this._renderer.resize(width, height);
+    }
+
+    public injectInto(element:HTMLElement|string):void{
+        this._renderer.injectInto(element);
     }
 
     public get canvasWidth():number{
@@ -161,8 +178,8 @@ export class FrostworkGame extends EventEmitter{
         return this._bounds;
     }
 
-    public get hasStarted():boolean{
-        return this._started;
+    public get isInitialized():boolean{
+        return this._initialized;
     }
 }
 
@@ -184,6 +201,7 @@ class GameLayersHelper{
         this.layers[GameLayer.HUD] = new Sprite();
 
         this.container = new Sprite();
+        this.forEachLayer(layer => this.container.scene.addChild(layer));
     }
 
     public destroyLayers():void{

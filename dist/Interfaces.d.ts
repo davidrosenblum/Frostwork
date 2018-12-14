@@ -2,6 +2,7 @@ import { EventEmitter } from "./EventEmitter";
 import { GameEntityFacing } from "./Enums";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
+import { Object2D } from "./Object2D";
 export interface FWEvent {
     type: string;
     emitter: EventEmitter;
@@ -34,6 +35,7 @@ export interface CollisionObject {
 export interface SortableDraw2D extends Draw2D {
     id: string;
     bottom: number;
+    setParent(parent: Object2D): any;
 }
 export interface SpriteConfig {
     image: string;
@@ -84,9 +86,9 @@ export interface GameMapLayerConfig {
 }
 export interface GameMapConfig {
     tileSize: number;
-    background: GameMapLayerConfig;
-    midground: GameMapLayerConfig;
-    foreground: GameMapLayerConfig;
+    background?: GameMapLayerConfig;
+    midground?: GameMapLayerConfig;
+    foreground?: GameMapLayerConfig;
 }
 export interface GameMovementKeys {
     up: string[];

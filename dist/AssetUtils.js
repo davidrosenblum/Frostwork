@@ -7,6 +7,9 @@ var AssetUtils = (function () {
         if (url in AssetUtils.images) {
             return Promise.resolve(AssetUtils.images[url]);
         }
+        else if (url in AssetUtils.loadingImages) {
+            return AssetUtils.loadingImages[url];
+        }
         return new Promise(function (resolve, reject) {
             var image = document.createElement("img");
             image.addEventListener("load", function () {
@@ -20,6 +23,9 @@ var AssetUtils = (function () {
     AssetUtils.loadAudio = function (url) {
         if (url in AssetUtils.sounds) {
             return Promise.resolve(AssetUtils.sounds[url]);
+        }
+        else if (url in AssetUtils.loadingSounds) {
+            return AssetUtils.loadingSounds[url];
         }
         return new Promise(function (resolve, reject) {
             var audio = document.createElement("audio");
@@ -63,8 +69,16 @@ var AssetUtils = (function () {
             });
         });
     };
+    AssetUtils.getImage = function (url) {
+        return AssetUtils.images[url] || null;
+    };
+    AssetUtils.getAudio = function (url) {
+        return AssetUtils.sounds[url] || null;
+    };
     AssetUtils.images = {};
     AssetUtils.sounds = {};
+    AssetUtils.loadingImages = {};
+    AssetUtils.loadingSounds = {};
     return AssetUtils;
 }());
 exports.AssetUtils = AssetUtils;

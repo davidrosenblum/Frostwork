@@ -27,7 +27,7 @@ var Object2D = (function (_super) {
         _this._id = Object2D.tokens.nextToken();
         _this._position = { x: x, y: y };
         _this._size = { width: width, height: height, depth: height - width };
-        _this._scene = new Scene_1.Scene();
+        _this._scene = new Scene_1.Scene(_this);
         _this._parent = null;
         _this._alpha = 1;
         _this.visible = true;
@@ -37,7 +37,9 @@ var Object2D = (function (_super) {
         this._scene.draw(ctx, this.x + offsetX, this.y + offsetY);
     };
     Object2D.prototype.setParent = function (parent) {
-        this._parent = parent;
+        if (parent.scene.containsChild(this)) {
+            this._parent = parent;
+        }
     };
     Object2D.prototype.setPosition = function (x, y) {
         this._position.x = x;

@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Clock_1 = require("./Clock");
 var Enums_1 = require("./Enums");
 var EventEmitter_1 = require("./EventEmitter");
 var KeyboardWatcher_1 = require("./KeyboardWatcher");
@@ -28,10 +29,11 @@ var FrostworkGame = (function (_super) {
         _this._layers = new GameLayersHelper();
         _this._keyWatcher = null;
         _this._playerMovement = new GamePlayerMovementHelper();
+        _this._clock = new Clock_1.Clock();
         _this._collisionGrid = null;
         _this._bounds = null;
         _this._scroller = null;
-        _this._started = false;
+        _this._initialized = false;
         _this.setMapBounds(0, 0, width, height);
         return _this;
     }
@@ -41,17 +43,25 @@ var FrostworkGame = (function (_super) {
         }
         this.emit("update");
     };
-    FrostworkGame.prototype.start = function () {
-        if (!this.hasStarted) {
+    FrostworkGame.prototype.init = function () {
+        if (!this.isInitialized) {
             this._layers.createLayers();
             this._keyWatcher = new KeyboardWatcher_1.KeyboardWatcher();
             this._renderer.startRendering(this._layers.container.scene);
-            this._started = true;
+            this._initialized = true;
             this.emit("start");
         }
     };
+    FrostworkGame.prototype.start = function () {
+        if (this.isInitialized) {
+            this._renderer.startRendering(this._layers.container.scene);
+            this.emit("start");
+        }
+        else
+            throw new Error("INIT_ERR: Please initialize the game before starting by calling the .init() method.");
+    };
     FrostworkGame.prototype.togglePause = function () {
-        if (this.hasStarted) {
+        if (this.isInitialized) {
             if (this._renderer.isRendering) {
                 this._renderer.stopRendering();
                 this.emit("pause");
@@ -63,8 +73,8 @@ var FrostworkGame = (function (_super) {
         }
     };
     FrostworkGame.prototype.stop = function () {
-        if (this.hasStarted) {
-            this._started = false;
+        if (this.isInitialized) {
+            this._initialized = false;
             this._layers.destroyLayers();
             this._keyWatcher = null;
             this._renderer.stopRendering();
@@ -73,7 +83,7 @@ var FrostworkGame = (function (_super) {
     };
     FrostworkGame.prototype.add = function (object, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
-        if (this.hasStarted) {
+        if (this.isInitialized) {
             if (layer in this._layers) {
                 return this._layers[layer].scene.addChild(object);
             }
@@ -85,7 +95,7 @@ var FrostworkGame = (function (_super) {
     };
     FrostworkGame.prototype.remove = function (target, layer) {
         if (layer === void 0) { layer = Enums_1.GameLayer.MIDGROUND; }
-        if (this.hasStarted) {
+        if (this.isInitialized) {
             if (layer in this._layers) {
                 return this._layers[layer].scene.removeChild(target) !== null;
             }
@@ -97,19 +107,21 @@ var FrostworkGame = (function (_super) {
     };
     FrostworkGame.prototype.setMap = function (config) {
         var _this = this;
-        var layerConfigs = [config.background, config.midground, config.background];
+        var layerConfigs = [config.background || null, config.midground || null, config.foreground || null];
         layerConfigs.forEach(function (layerConfig, index) {
-            var mapConfig = {
-                tileLayout: layerConfig.tileLayout,
-                tileTypes: layerConfig.tileTypes,
-                tileSize: config.tileSize,
-                offsetX: layerConfig.offsetX,
-                offsetY: layerConfig.offsetY,
-                scene: _this._layers.layers[index].scene
-            };
-            var collisionGrid = MapUtils_1.MapUtils.buildGrid(mapConfig);
-            if (layerConfig === config.midground) {
-                _this._collisionGrid = collisionGrid;
+            if (layerConfig) {
+                var mapConfig = {
+                    tileLayout: layerConfig.tileLayout,
+                    tileTypes: layerConfig.tileTypes,
+                    tileSize: config.tileSize,
+                    offsetX: layerConfig.offsetX,
+                    offsetY: layerConfig.offsetY,
+                    scene: _this._layers.layers[index + 1].scene
+                };
+                var collisionGrid = MapUtils_1.MapUtils.buildGrid(mapConfig);
+                if (layerConfig === config.midground) {
+                    _this._collisionGrid = collisionGrid;
+                }
             }
         });
     };
@@ -129,6 +141,9 @@ var FrostworkGame = (function (_super) {
     };
     FrostworkGame.prototype.resize = function (width, height) {
         this._renderer.resize(width, height);
+    };
+    FrostworkGame.prototype.injectInto = function (element) {
+        this._renderer.injectInto(element);
     };
     Object.defineProperty(FrostworkGame.prototype, "canvasWidth", {
         get: function () {
@@ -165,9 +180,9 @@ var FrostworkGame = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(FrostworkGame.prototype, "hasStarted", {
+    Object.defineProperty(FrostworkGame.prototype, "isInitialized", {
         get: function () {
-            return this._started;
+            return this._initialized;
         },
         enumerable: true,
         configurable: true
@@ -181,12 +196,14 @@ var GameLayersHelper = (function () {
         this.layers = null;
     }
     GameLayersHelper.prototype.createLayers = function () {
+        var _this = this;
         this.layers = {};
         this.layers[Enums_1.GameLayer.BACKGROUND] = new Sprite_1.Sprite();
         this.layers[Enums_1.GameLayer.MIDGROUND] = new Sprite_1.Sprite();
         this.layers[Enums_1.GameLayer.FOREGROUND] = new Sprite_1.Sprite();
         this.layers[Enums_1.GameLayer.HUD] = new Sprite_1.Sprite();
         this.container = new Sprite_1.Sprite();
+        this.forEachLayer(function (layer) { return _this.container.scene.addChild(layer); });
     };
     GameLayersHelper.prototype.destroyLayers = function () {
         for (var layerID in this.layers) {

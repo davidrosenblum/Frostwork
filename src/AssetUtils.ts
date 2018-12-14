@@ -2,9 +2,15 @@ export class AssetUtils{
     private static images:{[url:string]: HTMLImageElement} = {};
     private static sounds:{[url:string]: HTMLAudioElement} = {};
 
+    private static loadingImages:{[url:string]: Promise<HTMLImageElement>} = {};
+    private static loadingSounds:{[url:string]: Promise<HTMLAudioElement>} = {};
+
     public static loadImage(url:string):Promise<HTMLImageElement>{
         if(url in AssetUtils.images){
             return Promise.resolve(AssetUtils.images[url]);
+        }
+        else if(url in AssetUtils.loadingImages){
+            return AssetUtils.loadingImages[url];
         }
 
         return new Promise((resolve, reject) => {
@@ -24,6 +30,9 @@ export class AssetUtils{
     public static loadAudio(url:string):Promise<HTMLAudioElement>{
         if(url in AssetUtils.sounds){
             return Promise.resolve(AssetUtils.sounds[url]);
+        }
+        else if(url in AssetUtils.loadingSounds){
+            return AssetUtils.loadingSounds[url];
         }
 
         return new Promise((resolve, reject) => {
@@ -74,5 +83,13 @@ export class AssetUtils{
                     });
             });
         });
+    }
+
+    public static getImage(url:string):HTMLImageElement{
+        return AssetUtils.images[url] || null;
+    }
+
+    public static getAudio(url:string):HTMLAudioElement{
+        return AssetUtils.sounds[url] || null;
     }
 }

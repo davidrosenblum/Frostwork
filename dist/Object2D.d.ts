@@ -1,7 +1,7 @@
 import { EventEmitter } from "./EventEmitter";
-import { Draw2D, Point, Size } from "./Interfaces";
+import { Draw2D, Point, Size, SortableDraw2D } from "./Interfaces";
 import { Scene } from "./Scene";
-export declare abstract class Object2D extends EventEmitter implements Draw2D {
+export declare abstract class Object2D extends EventEmitter implements Draw2D, SortableDraw2D {
     private static tokens;
     private _id;
     private _position;
@@ -13,7 +13,7 @@ export declare abstract class Object2D extends EventEmitter implements Draw2D {
     constructor(width?: number, height?: number, x?: number, y?: number);
     abstract draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
     protected drawChildren(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
-    protected setParent(parent: Object2D): void;
+    setParent(parent: Object2D): void;
     setPosition(x: number, y: number): void;
     setSize(width: number, height: number, depth?: number): void;
     remove(): void;

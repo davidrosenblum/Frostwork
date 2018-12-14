@@ -1,19 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Scene = (function () {
-    function Scene() {
+    function Scene(wrap) {
         this._childIDs = {};
         this._drawList = [];
+        this._wrappedObject = wrap;
     }
     Scene.prototype.draw = function (ctx, offsetX, offsetY) {
         if (offsetX === void 0) { offsetX = 0; }
         if (offsetY === void 0) { offsetY = 0; }
         this._drawList.forEach(function (child) { return child.draw(ctx, offsetX, offsetY); });
     };
+    Scene.prototype.markChildAsMine = function (child) {
+        this._childIDs[child.id] = child;
+        this._drawList.push(child);
+        child.setParent(this._wrappedObject);
+    };
     Scene.prototype.addChild = function (child) {
         if (!this.containsChild(child)) {
-            this._childIDs[child.id] = child;
-            this._drawList.push(child);
+            this.markChildAsMine(child);
             return true;
         }
         return false;
@@ -30,6 +35,7 @@ var Scene = (function () {
                 }
             });
             this._drawList = updatedDrawList_1;
+            this.markChildAsMine(child);
             return true;
         }
         return false;
@@ -46,6 +52,7 @@ var Scene = (function () {
             var child = this.getChildAt(index);
             delete this._childIDs[child.id];
             this._drawList.splice(index, 1);
+            child.setParent(null);
             return child;
         }
     };
