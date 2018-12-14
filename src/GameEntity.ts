@@ -36,6 +36,9 @@ export class GameEntity extends AnimatedSprite{
         if(name){
             this._nametag = new TextField(name, 0, 0, font, fillStyle, strokeStyle);
             this.scene.addChild(this._nametag);
+
+            this._nametag.centerText();
+            this._nametag.y -= this._nametag.height;
         }
     }
 
@@ -46,13 +49,13 @@ export class GameEntity extends AnimatedSprite{
                     this.moveLeft(grid, bounds, scroller);
                     break;
                 case GameEntityFacing.DOWN:
-                    this.moveLeft(grid, bounds, scroller);
+                    this.moveDown(grid, bounds, scroller);
                     break;
                 case GameEntityFacing.LEFT:
                     this.moveLeft(grid, bounds, scroller);
                     break;
                 case GameEntityFacing.RIGHT:
-                    this.moveLeft(grid, bounds, scroller);
+                    this.moveRight(grid, bounds, scroller);
                     break;
             }
         }
@@ -79,13 +82,15 @@ export class GameEntity extends AnimatedSprite{
         }
 
         this.y = y;
+        this.facing = GameEntityFacing.UP;
+        
         return null;
     }
 
     public moveDown(grid:CollisionGrid<Sprite>, bounds?:Bounds, scroller?:Scroller):Sprite{
         if(!this.canMove) return null;
 
-        let y:number = this.y - this.moveSpeed;
+        let y:number = this.y + this.moveSpeed;
 
         if(grid){
             let hit:Sprite = grid.getObjectAtPixels(this.x, y + this.height);
@@ -106,6 +111,8 @@ export class GameEntity extends AnimatedSprite{
         }
 
         this.y = y;
+        this.facing = GameEntityFacing.DOWN;
+
         return null;
     }
 
@@ -130,6 +137,8 @@ export class GameEntity extends AnimatedSprite{
         }
 
         this.x = x;
+        this.facing = GameEntityFacing.LEFT;
+
         return null;
     }
 
@@ -157,6 +166,8 @@ export class GameEntity extends AnimatedSprite{
         }
 
         this.x = x;
+        this.facing = GameEntityFacing.RIGHT;
+
         return null;
     }
 
@@ -165,6 +176,10 @@ export class GameEntity extends AnimatedSprite{
     }
 
     public set facing(facing:GameEntityFacing){
+        if(this._facing !== facing){
+            this.emit("facing");
+        }
+        
         this._facing = facing;
         this.restartAnimation();
     }

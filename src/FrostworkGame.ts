@@ -1,3 +1,4 @@
+import { BoundingBox } from "./BoundingBox";
 import { CollisionGrid } from "./CollisionGrid";
 import { Clock } from "./Clock";
 import { GameLayer } from "./Enums";
@@ -17,7 +18,7 @@ export class FrostworkGame extends EventEmitter{
     private _playerMovement:GamePlayerMovementHelper;
     private _clock:Clock;
     private _collisionGrid:CollisionGrid<Sprite>;
-    private _bounds:Bounds;
+    private _bounds:BoundingBox;
     private _scroller:Scroller;
     private _player:GameEntity;
     private _initialized:boolean;
@@ -156,7 +157,7 @@ export class FrostworkGame extends EventEmitter{
 
         // apply map bounds (optional)
         if(autoSetMapBounds){
-            this.setMapBounds(0, 0, mapWidth, mapHeight);
+            this.setMapBounds(0, 0, mapWidth * config.tileSize, mapHeight * config.tileSize);
         }
     }
 
@@ -164,7 +165,7 @@ export class FrostworkGame extends EventEmitter{
         if(width < 0) width = this.canvasWidth;
         if(height < 0) height = this.canvasHeight;
 
-        this._bounds = { x, y, width, height };
+        this._bounds = new BoundingBox(x, y, width, height);
     }
 
     public removeAllChildren():void{
@@ -200,7 +201,7 @@ export class FrostworkGame extends EventEmitter{
         return this._keyWatcher;
     }
 
-    public get mapBounds():Bounds{
+    public get mapBounds():BoundingBox{
         return this._bounds;
     }
 

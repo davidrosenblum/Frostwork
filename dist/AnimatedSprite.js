@@ -32,7 +32,7 @@ var AnimatedSprite = (function (_super) {
                 this.emit("draw");
                 var x = this.x + offsetX;
                 var y = this.y + offsetY;
-                var anim = this._animations[this._currAnim][this._currFrame];
+                var anim = this.currentAnimationFrame;
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.drawImage(this.imageElement, anim.clipX, anim.clipY, anim.clipWidth, anim.clipHeight, x, y, this.width, this.height);
@@ -56,6 +56,7 @@ var AnimatedSprite = (function (_super) {
     };
     AnimatedSprite.prototype.playAnimation = function (animationName) {
         if (this.hasAnimation(animationName) && animationName !== this.currentAnimation) {
+            this._currAnim = animationName;
             this.restartAnimation();
             this._animating = true;
         }
@@ -70,13 +71,20 @@ var AnimatedSprite = (function (_super) {
         var _this = this;
         this._animations[animationName] = new Array(frames.length);
         frames.forEach(function (frame, i) { return _this._animations[animationName][i] = frame; });
-        if (this._currAnim = animationName) {
+        if (this._currAnim == animationName) {
             this.restartAnimation();
         }
     };
     AnimatedSprite.prototype.hasAnimation = function (animationName) {
         return animationName in this._animations;
     };
+    Object.defineProperty(AnimatedSprite.prototype, "currentAnimationFrame", {
+        get: function () {
+            return this._currAnim ? this._animations[this._currAnim][this._currFrame] : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(AnimatedSprite.prototype, "currentFrameCount", {
         get: function () {
             return this._currAnim ? this._animations[this._currAnim].length : 0;

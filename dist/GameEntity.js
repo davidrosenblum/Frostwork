@@ -39,6 +39,8 @@ var GameEntity = (function (_super) {
         if (name) {
             this._nametag = new TextField_1.TextField(name, 0, 0, font, fillStyle, strokeStyle);
             this.scene.addChild(this._nametag);
+            this._nametag.centerText();
+            this._nametag.y -= this._nametag.height;
         }
     };
     GameEntity.prototype.move = function (grid, bounds, scroller) {
@@ -48,13 +50,13 @@ var GameEntity = (function (_super) {
                     this.moveLeft(grid, bounds, scroller);
                     break;
                 case Enums_1.GameEntityFacing.DOWN:
-                    this.moveLeft(grid, bounds, scroller);
+                    this.moveDown(grid, bounds, scroller);
                     break;
                 case Enums_1.GameEntityFacing.LEFT:
                     this.moveLeft(grid, bounds, scroller);
                     break;
                 case Enums_1.GameEntityFacing.RIGHT:
-                    this.moveLeft(grid, bounds, scroller);
+                    this.moveRight(grid, bounds, scroller);
                     break;
             }
         }
@@ -75,12 +77,13 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.y = y;
+        this.facing = Enums_1.GameEntityFacing.UP;
         return null;
     };
     GameEntity.prototype.moveDown = function (grid, bounds, scroller) {
         if (!this.canMove)
             return null;
-        var y = this.y - this.moveSpeed;
+        var y = this.y + this.moveSpeed;
         if (grid) {
             var hit = grid.getObjectAtPixels(this.x, y + this.height);
             if (hit && this.collisionTest(hit)) {
@@ -96,6 +99,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.y = y;
+        this.facing = Enums_1.GameEntityFacing.DOWN;
         return null;
     };
     GameEntity.prototype.moveLeft = function (grid, bounds, scroller) {
@@ -114,6 +118,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.x = x;
+        this.facing = Enums_1.GameEntityFacing.LEFT;
         return null;
     };
     GameEntity.prototype.moveRight = function (grid, bounds, scroller) {
@@ -135,6 +140,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.x = x;
+        this.facing = Enums_1.GameEntityFacing.RIGHT;
         return null;
     };
     Object.defineProperty(GameEntity.prototype, "moveSpeed", {
@@ -152,6 +158,9 @@ var GameEntity = (function (_super) {
             return this._facing;
         },
         set: function (facing) {
+            if (this._facing !== facing) {
+                this.emit("facing");
+            }
             this._facing = facing;
             this.restartAnimation();
         },

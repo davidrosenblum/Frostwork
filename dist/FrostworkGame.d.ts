@@ -1,8 +1,9 @@
+import { BoundingBox } from "./BoundingBox";
 import { GameLayer } from "./Enums";
 import { EventEmitter } from "./EventEmitter";
 import { GameEntity } from "./GameEntity";
 import { KeyboardWatcher } from "./KeyboardWatcher";
-import { SortableDraw2D, GameMapConfig, Bounds } from "./Interfaces";
+import { SortableDraw2D, GameMapConfig } from "./Interfaces";
 export declare class FrostworkGame extends EventEmitter {
     private _renderer;
     private _layers;
@@ -32,6 +33,6 @@ export declare class FrostworkGame extends EventEmitter {
     readonly canvasHeight: number;
     readonly canvas: HTMLCanvasElement;
     readonly keyWatcher: KeyboardWatcher;
-    readonly mapBounds: Bounds;
+    readonly mapBounds: BoundingBox;
     readonly isInitialized: boolean;
 }

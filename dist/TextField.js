@@ -21,8 +21,8 @@ var TextField = (function (_super) {
         var _this = _super.call(this, x, y) || this;
         _this.text = text;
         _this.font = font;
-        _this.strokeStyle = strokeStyle;
         _this.fillStyle = fillStyle;
+        _this.strokeStyle = strokeStyle;
         _this.maxWidth = undefined;
         return _this;
     }
@@ -38,9 +38,14 @@ var TextField = (function (_super) {
             ctx.font = this.font;
             ctx.fillStyle = this.fillStyle;
             ctx.strokeStyle = this.strokeStyle;
-            ctx.fillText(this.text, x, y, this.maxWidth);
             ctx.strokeText(this.text, x, y, this.maxWidth);
+            ctx.fillText(this.text, x, y, this.maxWidth);
             ctx.restore();
+        }
+    };
+    TextField.prototype.centerText = function () {
+        if (this.parent) {
+            this.x = (this.parent.width - this.width) / 2;
         }
     };
     Object.defineProperty(TextField.prototype, "text", {
@@ -63,22 +68,22 @@ var TextField = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(TextField.prototype, "strokeStyle", {
-        get: function () {
-            return this._strokeStyle;
-        },
-        set: function (strokeColor) {
-            this._strokeStyle = strokeColor || TextField.defaultStrokeColor;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(TextField.prototype, "fillStyle", {
         get: function () {
             return this._fillStyle;
         },
         set: function (fillColor) {
             this._fillStyle = fillColor || TextField.defaultFillColor;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "strokeStyle", {
+        get: function () {
+            return this._strokeStyle;
+        },
+        set: function (strokeColor) {
+            this._strokeStyle = strokeColor || TextField.defaultStrokeColor;
         },
         enumerable: true,
         configurable: true
@@ -112,25 +117,11 @@ var TextField = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(TextField.prototype, "right", {
-        get: function () {
-            return this.x + this.width;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TextField.prototype, "bottom", {
-        get: function () {
-            return this.y + this.height;
-        },
-        enumerable: true,
-        configurable: true
-    });
     TextField.CANVAS = document.createElement("canvas");
     TextField.CTX = TextField.CANVAS.getContext("2d");
     TextField.defaultFont = "15px calibri";
-    TextField.defaultStrokeColor = "black";
     TextField.defaultFillColor = "white";
+    TextField.defaultStrokeColor = "black";
     return TextField;
 }(Object2D_1.Object2D));
 exports.TextField = TextField;

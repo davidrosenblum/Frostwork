@@ -14,6 +14,7 @@ export declare class AnimatedSprite extends Sprite {
     restartAnimation(): void;
     setAnimation(animationName: string, frames: AnimationFrameData[]): void;
     hasAnimation(animationName: string): boolean;
+    readonly currentAnimationFrame: AnimationFrameData;
     readonly currentFrameCount: number;
     readonly currentAnimation: string;
     readonly currentFrame: number;

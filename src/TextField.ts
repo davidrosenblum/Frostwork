@@ -6,8 +6,8 @@ export class TextField extends Object2D implements SortableDraw2D{
     private static readonly CTX:CanvasRenderingContext2D = TextField.CANVAS.getContext("2d");
 
     public static defaultFont:string = "15px calibri";
-    public static defaultStrokeColor:string = "black";
     public static defaultFillColor:string = "white";
+    public static defaultStrokeColor:string = "black";
 
     private _text:string;
     private _font:string;
@@ -20,8 +20,8 @@ export class TextField extends Object2D implements SortableDraw2D{
 
         this.text = text;
         this.font = font;
-        this.strokeStyle = strokeStyle;
         this.fillStyle = fillStyle;
+        this.strokeStyle = strokeStyle;
         this.maxWidth = undefined;
     }
 
@@ -37,9 +37,15 @@ export class TextField extends Object2D implements SortableDraw2D{
             ctx.font = this.font;
             ctx.fillStyle = this.fillStyle;
             ctx.strokeStyle = this.strokeStyle;
-            ctx.fillText(this.text, x, y, this.maxWidth);
             ctx.strokeText(this.text, x, y, this.maxWidth);
+            ctx.fillText(this.text, x, y, this.maxWidth);
             ctx.restore();
+        }
+    }
+
+    public centerText():void{
+        if(this.parent){
+            this.x = (this.parent.width - this.width) / 2;
         }
     }
 
@@ -51,12 +57,12 @@ export class TextField extends Object2D implements SortableDraw2D{
         this._font = font || TextField.defaultFont;
     }
 
-    public set strokeStyle(strokeColor:string){
-        this._strokeStyle = strokeColor || TextField.defaultStrokeColor;
-    }
-
     public set fillStyle(fillColor:string){
         this._fillStyle = fillColor || TextField.defaultFillColor;
+    }
+
+    public set strokeStyle(strokeColor:string){
+        this._strokeStyle = strokeColor || TextField.defaultStrokeColor;
     }
 
     public set maxWidth(maxWidth:number){
@@ -78,14 +84,6 @@ export class TextField extends Object2D implements SortableDraw2D{
 
     public get height():number{
         return parseFloat(this.font) || 0;
-    }
-
-    public get right():number{
-        return this.x + this.width;
-    }
-
-    public get bottom():number{
-        return this.y + this.height;
     }
 
     public get text():string{

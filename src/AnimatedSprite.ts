@@ -24,8 +24,8 @@ export class AnimatedSprite extends Sprite{
                 let x:number = this.x + offsetX;
                 let y:number = this.y + offsetY;
 
-                let anim:AnimationFrameData = this._animations[this._currAnim][this._currFrame];
-
+                let anim:AnimationFrameData = this.currentAnimationFrame;
+                
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.drawImage(
@@ -56,6 +56,7 @@ export class AnimatedSprite extends Sprite{
 
     public playAnimation(animationName:string):void{
         if(this.hasAnimation(animationName) && animationName !== this.currentAnimation){
+            this._currAnim = animationName;
             this.restartAnimation();
             this._animating = true;
         }
@@ -73,13 +74,17 @@ export class AnimatedSprite extends Sprite{
         this._animations[animationName] = new Array<AnimationFrameData>(frames.length);
         frames.forEach((frame, i) => this._animations[animationName][i] = frame);
 
-        if(this._currAnim = animationName){
+        if(this._currAnim == animationName){
             this.restartAnimation();
         }
     }
 
     public hasAnimation(animationName:string):boolean{
         return animationName in this._animations;
+    }
+
+    public get currentAnimationFrame():AnimationFrameData{
+        return this._currAnim ? this._animations[this._currAnim][this._currFrame] : null;
     }
 
     public get currentFrameCount():number{

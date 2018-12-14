@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var BoundingBox_1 = require("./BoundingBox");
 var Clock_1 = require("./Clock");
 var Enums_1 = require("./Enums");
 var EventEmitter_1 = require("./EventEmitter");
@@ -131,7 +132,7 @@ var FrostworkGame = (function (_super) {
             }
         });
         if (autoSetMapBounds) {
-            this.setMapBounds(0, 0, mapWidth, mapHeight);
+            this.setMapBounds(0, 0, mapWidth * config.tileSize, mapHeight * config.tileSize);
         }
     };
     FrostworkGame.prototype.setMapBounds = function (x, y, width, height) {
@@ -143,7 +144,7 @@ var FrostworkGame = (function (_super) {
             width = this.canvasWidth;
         if (height < 0)
             height = this.canvasHeight;
-        this._bounds = { x: x, y: y, width: width, height: height };
+        this._bounds = new BoundingBox_1.BoundingBox(x, y, width, height);
     };
     FrostworkGame.prototype.removeAllChildren = function () {
         this._layers.removeAllChildren();

@@ -1,3 +1,4 @@
+import { BoundingBox } from "./BoundingBox";
 import { DisplayObject } from "./DisplayObject";
 import { Size, SortableDraw2D } from "./Interfaces";
 import { Scene } from "./Scene";
@@ -18,8 +19,14 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         this._scene = new Scene(this);
     }
 
-    protected drawChildren(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void{
-        this._scene.draw(ctx, this.x + offsetX, this.y + offsetY);
+    protected drawChildren(ctx:CanvasRenderingContext2D, x:number, y:number):void{
+        this._scene.draw(ctx, x, y);
+    }
+
+    public remove():void{
+        if(this._parent){
+            this._parent.scene.removeChild(this);
+        }
     }
 
     // uses actual bounding box
@@ -44,7 +51,7 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
 
     // allows for custom bounding boxes 
     public collisionTest(target:Object2D):boolean{
-        let bounds1:Size = this._collisionBounds;
+        let bounds1:Size = this.collisionBounds;
         let bounds2:Size = target.collisionBounds;
 
         if(this.x < target.x + bounds2.width && target.x < this.x + bounds1.width){
@@ -65,12 +72,12 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         return null;
     }
 
-    public setCustomCollisionBounds(width:number, height:number, depth?:number):void{
-        this._collisionBounds = { width, height, depth: depth || height - width };
-    }
-
     public useDefaultCollisionBounds():void{
         this._collisionBounds = null;
+    }
+
+    public setCustomCollisionBounds(width:number, height:number, depth?:number):void{
+        this._collisionBounds = { width, height, depth: depth || height - width };
     }
 
     public setParent(parent:Object2D):void{
@@ -79,14 +86,12 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         }
     }
 
-    public remove():void{
-        if(this._parent){
-            this._parent.scene.removeChild(this);
-        }
+    public getBoundingBox():BoundingBox{
+        return new BoundingBox(this.x, this.y, this.width, this.height);
     }
 
     public get collisionBounds():Size{
-        return this._collisionBounds || null;
+        return this._collisionBounds || this.size;
     }
 
     public get scene():Scene{

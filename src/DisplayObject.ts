@@ -2,7 +2,7 @@ import { EventEmitter } from "./EventEmitter";
 import { Draw2D, Point, Size } from "./Interfaces";
 import { TokenGenerator } from "./TokenGenerator";
 
-export abstract class DisplayObject extends EventEmitter implements Draw2D{
+export abstract class DisplayObject extends EventEmitter implements Draw2D, Point, Size{
     private static tokens:TokenGenerator = new TokenGenerator(16);
 
     private _id:string;
@@ -62,6 +62,14 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D{
 
     public set alpha(alpha:number){
         this._alpha = Math.min(Math.max(alpha, 0), 1);
+    }
+
+    public get position():Point{
+        return this._position;
+    }
+
+    public get size():Size{
+        return this._size;
     }
 
     public get front():number{
