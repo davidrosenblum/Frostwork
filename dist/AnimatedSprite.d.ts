@@ -19,4 +19,5 @@ export declare class AnimatedSprite extends Sprite {
     readonly currentAnimation: string;
     readonly currentFrame: number;
     readonly isAnimating: boolean;
+    toString(): string;
 }

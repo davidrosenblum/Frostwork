@@ -11,6 +11,23 @@ var BoundingBox = (function () {
         this.width = width;
         this.height = height;
     }
+    BoundingBox.prototype.hitBoxTest = function (target) {
+        if (target.x < this.right && this.x < target.right) {
+            if (target.y < this.bottom && this.y < target.bottom) {
+                return true;
+            }
+        }
+        return false;
+    };
+    BoundingBox.prototype.hitBoxTests = function (targets) {
+        for (var _i = 0, targets_1 = targets; _i < targets_1.length; _i++) {
+            var target = targets_1[_i];
+            if (this.hitBoxTest(target)) {
+                return target;
+            }
+        }
+        return null;
+    };
     Object.defineProperty(BoundingBox.prototype, "centerX", {
         get: function () {
             return this.x + this.width / 2;

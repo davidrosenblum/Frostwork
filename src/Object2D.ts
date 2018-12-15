@@ -29,37 +29,12 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         }
     }
 
-    // uses actual bounding box
-    public hitBoxTest(target:Object2D):boolean{
-        if(this.x < target.right && target.x < this.right){
-            if(this.y < target.bottom && target.y < this.bottom){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // uses actual bounding box
-    public hitBoxTests(targets:Object2D[]):Object2D{
-        for(let target of targets){
-            if(this.hitBoxTest(target)){
-                return target;
-            }
-        }
-        return null;
-    }
-
     // allows for custom bounding boxes 
     public collisionTest(target:Object2D):boolean{
-        let bounds1:Size = this.collisionBounds;
-        let bounds2:Size = target.collisionBounds;
+        let bounds1:BoundingBox = this.getCollisionBox();
+        let bounds2:BoundingBox = target.getCollisionBox();
 
-        if(this.x < target.x + bounds2.width && target.x < this.x + bounds1.width){
-            if(this.y < target.y + bounds2.height - bounds2.depth && target.y < this.y + bounds1.height - bounds1.depth){
-                return true;
-            }
-        }
-        return false;
+        return bounds1.hitBoxTest(bounds2);
     }
 
     // allows for custom bounding boxes 
@@ -76,8 +51,8 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         this._collisionBounds = null;
     }
 
-    public setCustomCollisionBounds(width:number, height:number, depth?:number):void{
-        this._collisionBounds = { width, height, depth: depth || height - width };
+    public setCustomCollisionBounds(width:number, height:number):void{
+        this._collisionBounds = { width, height };
     }
 
     public setParent(parent:Object2D):void{
@@ -88,6 +63,17 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
 
     public getBoundingBox():BoundingBox{
         return new BoundingBox(this.x, this.y, this.width, this.height);
+    }
+
+    public getCollisionBox():BoundingBox{
+        if(this._collisionBounds){
+            // centers
+            let x:number = this.x - (this._collisionBounds.width - this.width) / 2;
+            let y:number = this.bottom - this._collisionBounds.height;
+
+            return new BoundingBox(x, y, this._collisionBounds.width, this._collisionBounds.height);
+        }
+        return this.getBoundingBox();
     }
 
     public get collisionBounds():Size{

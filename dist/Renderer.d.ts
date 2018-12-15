@@ -12,6 +12,7 @@ export declare class Renderer extends EventEmitter {
     stopRendering(): void;
     resize(width: number, height: number): void;
     injectInto(element: HTMLElement | string): void;
+    download(format?: "jpg" | "png", filename?: string): void;
     readonly canvasWidth: number;
     readonly canvasHeight: number;
     readonly canvas: HTMLCanvasElement;

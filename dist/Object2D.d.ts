@@ -9,14 +9,13 @@ export declare abstract class Object2D extends DisplayObject implements Sortable
     constructor(width?: number, height?: number, x?: number, y?: number);
     protected drawChildren(ctx: CanvasRenderingContext2D, x: number, y: number): void;
     remove(): void;
-    hitBoxTest(target: Object2D): boolean;
-    hitBoxTests(targets: Object2D[]): Object2D;
     collisionTest(target: Object2D): boolean;
     collisionTests(targets: Object2D[]): Object2D;
     useDefaultCollisionBounds(): void;
-    setCustomCollisionBounds(width: number, height: number, depth?: number): void;
+    setCustomCollisionBounds(width: number, height: number): void;
     setParent(parent: Object2D): void;
     getBoundingBox(): BoundingBox;
+    getCollisionBox(): BoundingBox;
     readonly collisionBounds: Size;
     readonly scene: Scene;
     readonly parent: Object2D;

@@ -53,6 +53,18 @@ export class Renderer extends EventEmitter{
         tag.appendChild(this._canvas);
     }
 
+    public download(format:"jpg"|"png"="png", filename?:string):void{
+        let a:HTMLAnchorElement = document.createElement("a");
+        let data:string = this._canvas.toDataURL(`image/${format.replace("jpg", "jpeg")}`);
+
+        let fname:string = filename || `capture_${Date.now()}`;
+        fname = fname.replace(".jpg", "").replace(".png", "");
+
+        a.setAttribute("href", data);
+        a.setAttribute("download", `${fname}.${format}`);
+        a.click();
+    }
+
     public get canvasWidth():number{
         return this._canvas.width;
     }

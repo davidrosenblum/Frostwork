@@ -113,6 +113,9 @@ var AnimatedSprite = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    AnimatedSprite.prototype.toString = function () {
+        return "[object AnimatedSprite]";
+    };
     return AnimatedSprite;
 }(Sprite_1.Sprite));
 exports.AnimatedSprite = AnimatedSprite;

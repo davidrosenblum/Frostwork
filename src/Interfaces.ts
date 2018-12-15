@@ -1,3 +1,5 @@
+import { BoundingBox } from "./BoundingBox";
+import { CollisionGrid } from "./CollisionGrid";
 import { EventEmitter } from "./EventEmitter";
 import { GameEntityFacing } from "./Enums";
 import { Scene } from "./Scene";
@@ -17,7 +19,6 @@ export interface Point{
 export interface Size{
     width:number;
     height:number;
-    depth:number;
 }
 
 export interface Bounds{
@@ -30,14 +31,6 @@ export interface Bounds{
 export interface Draw2D{
     draw(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void;
 }
-
-/*export interface CollisionObject{
-    hitBoxTest(target:CollisionObject):boolean;
-    collisionTest(target:CollisionObject):boolean;
-    hitBoxTests(target:CollisionObject[]):CollisionObject;
-    collisionTests(target:CollisionObject[]):CollisionObject;
-    collisionBounds:Size;
-}*/
 
 export interface SortableDraw2D extends Draw2D{
     id:string;
@@ -110,4 +103,9 @@ export interface GameMovementKeys{
     down:string[];
     left:string[];
     right:string[];
+}
+
+export interface GeneratedMapData{
+    collisionGrid:CollisionGrid<Sprite>;
+    mapBounds:BoundingBox;
 }

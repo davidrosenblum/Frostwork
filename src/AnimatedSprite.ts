@@ -102,4 +102,8 @@ export class AnimatedSprite extends Sprite{
     public get isAnimating():boolean{
         return this._animating;
     }
+
+    public toString(){
+        return "[object AnimatedSprite]";
+    }
 }

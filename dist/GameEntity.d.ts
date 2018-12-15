@@ -19,4 +19,5 @@ export declare class GameEntity extends AnimatedSprite {
     moveRight(grid: CollisionGrid<Sprite>, bounds?: Bounds, scroller?: Scroller): Sprite;
     moveSpeed: number;
     facing: GameEntityFacing;
+    toString(): string;
 }

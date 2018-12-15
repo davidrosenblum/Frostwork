@@ -53,4 +53,8 @@ export class MPGameEntity extends GameEntity{
     public get teamID():string{
         return this._teamID;
     }
+
+    public toString(){
+        return "[object MPGameEntity]";
+    }
 }

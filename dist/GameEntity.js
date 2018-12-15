@@ -65,7 +65,8 @@ var GameEntity = (function (_super) {
             return null;
         var y = this.y - this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtPixels(this.x, y);
+            var cb = this.getCollisionBox();
+            var hit = grid.getObjectAtPixels(cb.centerX, cb.y);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }
@@ -84,6 +85,7 @@ var GameEntity = (function (_super) {
             return null;
         var y = this.y + this.moveSpeed;
         if (grid) {
+            var cb = this.getCollisionBox();
             var hit = grid.getObjectAtPixels(this.x, y + this.height);
             if (hit && this.collisionTest(hit)) {
                 return hit;
@@ -167,6 +169,9 @@ var GameEntity = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    GameEntity.prototype.toString = function () {
+        return "[object GameEntity]";
+    };
     return GameEntity;
 }(AnimatedSprite_1.AnimatedSprite));
 exports.GameEntity = GameEntity;

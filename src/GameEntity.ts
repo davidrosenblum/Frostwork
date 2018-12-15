@@ -1,4 +1,5 @@
 import { AnimatedSprite } from "./AnimatedSprite";
+import { BoundingBox } from "./BoundingBox";
 import { CollisionGrid } from "./CollisionGrid";
 import { GameEntityFacing } from "./Enums";
 import { Bounds } from "./Interfaces";
@@ -67,7 +68,8 @@ export class GameEntity extends AnimatedSprite{
         let y:number = this.y - this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtPixels(this.x, y);
+            let cb:BoundingBox = this.getCollisionBox();
+            let hit:Sprite = grid.getObjectAtPixels(cb.centerX, cb.y);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }
@@ -93,6 +95,7 @@ export class GameEntity extends AnimatedSprite{
         let y:number = this.y + this.moveSpeed;
 
         if(grid){
+            let cb:BoundingBox = this.getCollisionBox();
             let hit:Sprite = grid.getObjectAtPixels(this.x, y + this.height);
             if(hit && this.collisionTest(hit)){
                 return hit;
@@ -192,5 +195,9 @@ export class GameEntity extends AnimatedSprite{
 
     public get facing():GameEntityFacing{
         return this._facing;
+    }
+
+    public toString(){
+        return "[object GameEntity]";
     }
 }

@@ -66,6 +66,9 @@ var MPGameEntity = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    MPGameEntity.prototype.toString = function () {
+        return "[object MPGameEntity]";
+    };
     return MPGameEntity;
 }(GameEntity_1.GameEntity));
 exports.MPGameEntity = MPGameEntity;

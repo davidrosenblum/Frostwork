@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var CollisionGrid_1 = require("./CollisionGrid");
+var BoundingBox_1 = require("./BoundingBox");
 var MapUtils = (function () {
     function MapUtils() {
     }
@@ -8,7 +9,7 @@ var MapUtils = (function () {
         var tileLayout = config.tileLayout, tileTypes = config.tileTypes, tileSize = config.tileSize;
         var rows = tileLayout[0].length;
         var cols = tileLayout.length;
-        var grid = new CollisionGrid_1.CollisionGrid(rows, cols, tileSize);
+        var collisionGrid = new CollisionGrid_1.CollisionGrid(rows, cols, tileSize);
         for (var row = 0; row < tileLayout.length; row++) {
             for (var col = 0; col < tileLayout[row].length; col++) {
                 var typeID = tileLayout[row][col] || -1;
@@ -20,17 +21,19 @@ var MapUtils = (function () {
                     if (tile.height > tileSize) {
                         tile.y -= (tile.height - tileSize);
                     }
-                    grid.storeObjectAt(tile, row, col);
+                    collisionGrid.storeObjectAt(tile, row, col);
                     if (config.scene) {
                         config.scene.addChild(tile);
                     }
                 }
             }
         }
-        return grid;
+        var mapBounds = new BoundingBox_1.BoundingBox(0, 0, rows * tileSize, cols * tileSize);
+        return { collisionGrid: collisionGrid, mapBounds: mapBounds };
     };
     MapUtils.buildLayerMap = function (config, backgroundScene, midgroundScene, foregroundScene) {
         var collisionGrid = null;
+        var mapBounds = null;
         var scenes = [backgroundScene, midgroundScene, foregroundScene];
         var layerConfigs = [config.background || null, config.midground || null, config.foreground || null];
         layerConfigs.forEach(function (layerConfig, index) {
@@ -41,13 +44,14 @@ var MapUtils = (function () {
                     tileSize: config.tileSize,
                     scene: index in scenes ? scenes[index] : null
                 };
-                var grid = MapUtils.buildGrid(cfg);
+                var mapData = MapUtils.buildGrid(cfg);
                 if (layerConfig === config.midground) {
-                    collisionGrid = grid;
+                    collisionGrid = mapData.collisionGrid;
+                    mapBounds = mapData.mapBounds;
                 }
             }
         });
-        return collisionGrid;
+        return { collisionGrid: collisionGrid, mapBounds: mapBounds };
     };
     return MapUtils;
 }());

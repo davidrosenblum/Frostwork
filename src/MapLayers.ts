@@ -1,7 +1,8 @@
+import { BoundingBox } from "./BoundingBox";
 import { CollisionGrid } from "./CollisionGrid";
 import { GameLayer } from "./Enums";
 import { InvalidLayerError } from "./Errors";
-import { SortableDraw2D, LayeredMapConfig } from "./Interfaces";
+import { SortableDraw2D, LayeredMapConfig, GeneratedMapData } from "./Interfaces";
 import { MapUtils } from "./MapUtils";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
@@ -24,7 +25,7 @@ export class MapLayers{
         }
     }
 
-    public buildMap(config:LayeredMapConfig):CollisionGrid<Sprite>{
+    public buildMap(config:LayeredMapConfig):GeneratedMapData{
         return MapUtils.buildLayerMap(
             config,
             this._layers[GameLayer.BACKGROUND].scene,
@@ -55,6 +56,10 @@ export class MapLayers{
         for(let layer in this._layers){
             fn(this._layers[layer].scene);
         }
+    }
+
+    public depthSort():void{
+        this._layers[GameLayer.MIDGROUND].scene.depthSort();
     }
 
     public countChildren():number{

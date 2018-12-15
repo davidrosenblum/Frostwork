@@ -42,6 +42,9 @@ var MapLayers = (function () {
             fn(this._layers[layer].scene);
         }
     };
+    MapLayers.prototype.depthSort = function () {
+        this._layers[2].scene.depthSort();
+    };
     MapLayers.prototype.countChildren = function () {
         var num = 0;
         this.forEachScene(function (scene) { return num += scene.numChildren; });

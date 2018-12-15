@@ -9,4 +9,5 @@ export declare class Sprite extends Object2D {
     draw(ctx: CanvasRenderingContext2D, offsetX?: number, offsetY?: number): void;
     setImage(url: string): Promise<HTMLImageElement>;
     readonly imageElement: HTMLImageElement;
+    toString(): string;
 }

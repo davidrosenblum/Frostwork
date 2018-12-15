@@ -14,16 +14,11 @@ export class Sprite extends Object2D{
 
         this._image = Sprite.EMPTY_IMAGE;
         
-
         if(image) this.setImage(image);
     }
 
     public static create(config:SpriteConfig):Sprite{
         let sprite:Sprite = new Sprite(config.image, config.width, config.height, config.x, config.y);
-
-        if(config.depth){
-            sprite.depth = config.depth;
-        }
 
         return sprite;
     }
@@ -58,5 +53,9 @@ export class Sprite extends Object2D{
 
     public get imageElement():HTMLImageElement{
         return this._image;
+    }
+
+    public toString(){
+        return "[object Sprite]";
     }
 }

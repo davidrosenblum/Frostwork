@@ -33,36 +33,14 @@ var Object2D = (function (_super) {
             this._parent.scene.removeChild(this);
         }
     };
-    Object2D.prototype.hitBoxTest = function (target) {
-        if (this.x < target.right && target.x < this.right) {
-            if (this.y < target.bottom && target.y < this.bottom) {
-                return true;
-            }
-        }
-        return false;
-    };
-    Object2D.prototype.hitBoxTests = function (targets) {
-        for (var _i = 0, targets_1 = targets; _i < targets_1.length; _i++) {
-            var target = targets_1[_i];
-            if (this.hitBoxTest(target)) {
-                return target;
-            }
-        }
-        return null;
-    };
     Object2D.prototype.collisionTest = function (target) {
-        var bounds1 = this.collisionBounds;
-        var bounds2 = target.collisionBounds;
-        if (this.x < target.x + bounds2.width && target.x < this.x + bounds1.width) {
-            if (this.y < target.y + bounds2.height - bounds2.depth && target.y < this.y + bounds1.height - bounds1.depth) {
-                return true;
-            }
-        }
-        return false;
+        var bounds1 = this.getCollisionBox();
+        var bounds2 = target.getCollisionBox();
+        return bounds1.hitBoxTest(bounds2);
     };
     Object2D.prototype.collisionTests = function (targets) {
-        for (var _i = 0, targets_2 = targets; _i < targets_2.length; _i++) {
-            var target = targets_2[_i];
+        for (var _i = 0, targets_1 = targets; _i < targets_1.length; _i++) {
+            var target = targets_1[_i];
             if (this.collisionTest(target)) {
                 return target;
             }
@@ -72,8 +50,8 @@ var Object2D = (function (_super) {
     Object2D.prototype.useDefaultCollisionBounds = function () {
         this._collisionBounds = null;
     };
-    Object2D.prototype.setCustomCollisionBounds = function (width, height, depth) {
-        this._collisionBounds = { width: width, height: height, depth: depth || height - width };
+    Object2D.prototype.setCustomCollisionBounds = function (width, height) {
+        this._collisionBounds = { width: width, height: height };
     };
     Object2D.prototype.setParent = function (parent) {
         if (parent.scene.containsChild(this)) {
@@ -82,6 +60,14 @@ var Object2D = (function (_super) {
     };
     Object2D.prototype.getBoundingBox = function () {
         return new BoundingBox_1.BoundingBox(this.x, this.y, this.width, this.height);
+    };
+    Object2D.prototype.getCollisionBox = function () {
+        if (this._collisionBounds) {
+            var x = this.x - (this._collisionBounds.width - this.width) / 2;
+            var y = this.bottom - this._collisionBounds.height;
+            return new BoundingBox_1.BoundingBox(x, y, this._collisionBounds.width, this._collisionBounds.height);
+        }
+        return this.getBoundingBox();
     };
     Object.defineProperty(Object2D.prototype, "collisionBounds", {
         get: function () {

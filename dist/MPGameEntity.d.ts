@@ -8,4 +8,5 @@ export declare class MPGameEntity extends GameEntity {
     getData(): GameEntityData;
     readonly objectID: string;
     readonly teamID: string;
+    toString(): string;
 }

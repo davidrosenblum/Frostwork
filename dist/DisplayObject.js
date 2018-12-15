@@ -25,7 +25,7 @@ var DisplayObject = (function (_super) {
         var _this = _super.call(this) || this;
         _this._id = DisplayObject.tokens.nextToken();
         _this._position = { x: x, y: y };
-        _this._size = { width: width, height: height, depth: height - width };
+        _this._size = { width: width, height: height };
         _this._alpha = 1;
         _this.visible = true;
         return _this;
@@ -35,8 +35,8 @@ var DisplayObject = (function (_super) {
         this._position.y = y;
         this.emit("move");
     };
-    DisplayObject.prototype.setSize = function (width, height, depth) {
-        this._size = { width: width, height: height, depth: depth || height - width };
+    DisplayObject.prototype.setSize = function (width, height) {
+        this._size = { width: width, height: height };
         this.emit("resize");
     };
     Object.defineProperty(DisplayObject.prototype, "x", {
@@ -83,17 +83,6 @@ var DisplayObject = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(DisplayObject.prototype, "depth", {
-        get: function () {
-            return this._size.depth;
-        },
-        set: function (depth) {
-            this._size.depth = depth;
-            this.emit("resize");
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(DisplayObject.prototype, "alpha", {
         get: function () {
             return this._alpha;
@@ -114,13 +103,6 @@ var DisplayObject = (function (_super) {
     Object.defineProperty(DisplayObject.prototype, "size", {
         get: function () {
             return this._size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DisplayObject.prototype, "front", {
-        get: function () {
-            return this.bottom - this.depth;
         },
         enumerable: true,
         configurable: true

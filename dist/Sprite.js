@@ -61,9 +61,6 @@ var Sprite = (function (_super) {
     }
     Sprite.create = function (config) {
         var sprite = new Sprite(config.image, config.width, config.height, config.x, config.y);
-        if (config.depth) {
-            sprite.depth = config.depth;
-        }
         return sprite;
     };
     Sprite.prototype.draw = function (ctx, offsetX, offsetY) {
@@ -108,6 +105,9 @@ var Sprite = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Sprite.prototype.toString = function () {
+        return "[object Sprite]";
+    };
     Sprite.EMPTY_IMAGE = document.createElement("img");
     Sprite.badImage = null;
     return Sprite;

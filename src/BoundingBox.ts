@@ -1,6 +1,6 @@
-import { Bounds } from "./Interfaces";
+import { Bounds, Point } from "./Interfaces";
 
-export class BoundingBox implements Bounds{
+export class BoundingBox implements Bounds, Point{
     public x:number;
     public y:number;
     public width:number;
@@ -11,6 +11,24 @@ export class BoundingBox implements Bounds{
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    public hitBoxTest(target:BoundingBox):boolean{
+        if(target.x < this.right && this.x < target.right){
+            if(target.y < this.bottom && this.y < target.bottom){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public hitBoxTests(targets:BoundingBox[]):BoundingBox{
+        for(let target of targets){
+            if(this.hitBoxTest(target)){
+                return target;
+            }
+        }
+        return null;
     }
 
     public get centerX():number{

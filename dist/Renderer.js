@@ -54,6 +54,16 @@ var Renderer = (function (_super) {
         var tag = (typeof element === "string") ? document.querySelector(element) : element;
         tag.appendChild(this._canvas);
     };
+    Renderer.prototype.download = function (format, filename) {
+        if (format === void 0) { format = "png"; }
+        var a = document.createElement("a");
+        var data = this._canvas.toDataURL("image/" + format.replace("jpg", "jpeg"));
+        var fname = filename || "capture_" + Date.now();
+        fname = fname.replace(".jpg", "").replace(".png", "");
+        a.setAttribute("href", data);
+        a.setAttribute("download", fname + "." + format);
+        a.click();
+    };
     Object.defineProperty(Renderer.prototype, "canvasWidth", {
         get: function () {
             return this._canvas.width;

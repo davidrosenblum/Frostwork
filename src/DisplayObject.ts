@@ -17,7 +17,7 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D, Poin
 
         this._id = DisplayObject.tokens.nextToken();
         this._position = { x, y };
-        this._size = { width, height, depth: height - width };
+        this._size = { width, height };
         this._alpha = 1;
         this.visible = true;
     }
@@ -30,8 +30,8 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D, Poin
         this.emit("move");
     }
 
-    public setSize(width:number, height:number, depth?:number):void{
-        this._size = { width, height, depth: depth || height - width }
+    public setSize(width:number, height:number):void{
+        this._size = { width, height }
         this.emit("resize");
     }
 
@@ -55,11 +55,6 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D, Poin
         this.emit("resize");
     }
 
-    public set depth(depth:number){
-        this._size.depth = depth;
-        this.emit("resize");
-    }
-
     public set alpha(alpha:number){
         this._alpha = Math.min(Math.max(alpha, 0), 1);
     }
@@ -70,10 +65,6 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D, Poin
 
     public get size():Size{
         return this._size;
-    }
-
-    public get front():number{
-        return this.bottom - this.depth;
     }
 
     public get bottom():number{
@@ -106,10 +97,6 @@ export abstract class DisplayObject extends EventEmitter implements Draw2D, Poin
 
     public get height():number{
         return this._size.height;
-    }
-
-    public get depth():number{
-        return this._size.depth;
     }
 
     public get alpha():number{

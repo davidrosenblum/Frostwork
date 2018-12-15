@@ -1,3 +1,5 @@
+import { BoundingBox } from "./BoundingBox";
+import { CollisionGrid } from "./CollisionGrid";
 import { EventEmitter } from "./EventEmitter";
 import { GameEntityFacing } from "./Enums";
 import { Scene } from "./Scene";
@@ -14,7 +16,6 @@ export interface Point {
 export interface Size {
     width: number;
     height: number;
-    depth: number;
 }
 export interface Bounds {
     x: number;
@@ -88,4 +89,8 @@ export interface GameMovementKeys {
     down: string[];
     left: string[];
     right: string[];
+}
+export interface GeneratedMapData {
+    collisionGrid: CollisionGrid<Sprite>;
+    mapBounds: BoundingBox;
 }
