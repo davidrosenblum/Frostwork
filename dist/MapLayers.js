@@ -52,6 +52,9 @@ var MapLayers = (function () {
             if (this.add(object, layer)) {
                 object.x = col * this._mapGrid.width;
                 object.y = row * this._mapGrid.height;
+                if (object.height > this._mapGrid.height) {
+                    object.height -= (this._mapGrid.height);
+                }
                 return true;
             }
             return false;
@@ -91,9 +94,9 @@ var MapLayers = (function () {
         this.forEachScene(function (scene) { return num += scene.numChildren; });
         return num;
     };
-    Object.defineProperty(MapLayers.prototype, "scene", {
+    Object.defineProperty(MapLayers.prototype, "mapSprite", {
         get: function () {
-            return this._container.scene;
+            return this._container;
         },
         enumerable: true,
         configurable: true

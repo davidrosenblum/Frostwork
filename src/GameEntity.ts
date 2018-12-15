@@ -79,7 +79,7 @@ export class GameEntity extends AnimatedSprite{
         }
 
         if(scroller){
-            // scroll left by this.x - x pixels 
+            scroller.scrollYWith(this, y - this.y);
         }
 
         this.y = y;
@@ -108,7 +108,7 @@ export class GameEntity extends AnimatedSprite{
         }
 
         if(scroller){
-            // scroll left by this.x - x pixels 
+            scroller.scrollYWith(this, y - this.y);
         }
 
         this.y = y;
@@ -135,6 +135,9 @@ export class GameEntity extends AnimatedSprite{
 
         if(scroller){
             // scroll left by this.x - x pixels 
+            if(scroller){
+                scroller.scrollXWith(this, x - this.x);
+            }
         }
 
         this.x = x;
@@ -163,7 +166,7 @@ export class GameEntity extends AnimatedSprite{
         }
 
         if(scroller){
-            // scroll right
+            scroller.scrollXWith(this, x - this.x);
         }
 
         this.x = x;

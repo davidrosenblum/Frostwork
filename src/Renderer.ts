@@ -1,17 +1,18 @@
 import { EventEmitter } from "./EventEmitter";
-import { Scene } from "./Scene";
+import { Object2D } from "./Object2D";
 
 export class Renderer extends EventEmitter{
     private _canvas:HTMLCanvasElement;
     private _context:CanvasRenderingContext2D;
-    private _scene:Scene;
+    private _renderTarget:Object2D;
     private _rendering:boolean;
 
     constructor(width:number=550, height:number=400){
         super();
 
         this._canvas = document.createElement("canvas");
-        this._context = this._canvas.getContext("2d");       
+        this._context = this._canvas.getContext("2d");   
+        this._renderTarget = null;    
         this._rendering = false;
 
         this.resize(width, height);
@@ -25,22 +26,22 @@ export class Renderer extends EventEmitter{
         this.emit("render");
 
         this.clear();
-        this._scene.draw(this._context, 0, 0);
+        this._renderTarget.draw(this._context, 0, 0);
 
         if(this.isRendering){
             requestAnimationFrame(this.renderFrame.bind(this));
         }
     }   
 
-    public startRendering(scene:Scene):void{
+    public startRendering(target:Object2D):void{
         this._rendering = true;
-        this._scene = scene;
+        this._renderTarget = target;
         requestAnimationFrame(this.renderFrame.bind(this));
     }
 
     public stopRendering():void{
         this._rendering = false;
-        this._scene = null;
+        this._renderTarget = null;
     }
 
     public resize(width:number, height:number):void{
@@ -63,6 +64,10 @@ export class Renderer extends EventEmitter{
         a.setAttribute("href", data);
         a.setAttribute("download", `${fname}.${format}`);
         a.click();
+    }
+
+    public get target():Object2D{
+        return this._renderTarget;
     }
 
     public get canvasWidth():number{

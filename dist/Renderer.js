@@ -22,6 +22,7 @@ var Renderer = (function (_super) {
         var _this = _super.call(this) || this;
         _this._canvas = document.createElement("canvas");
         _this._context = _this._canvas.getContext("2d");
+        _this._renderTarget = null;
         _this._rendering = false;
         _this.resize(width, height);
         return _this;
@@ -32,19 +33,19 @@ var Renderer = (function (_super) {
     Renderer.prototype.renderFrame = function () {
         this.emit("render");
         this.clear();
-        this._scene.draw(this._context, 0, 0);
+        this._renderTarget.draw(this._context, 0, 0);
         if (this.isRendering) {
             requestAnimationFrame(this.renderFrame.bind(this));
         }
     };
-    Renderer.prototype.startRendering = function (scene) {
+    Renderer.prototype.startRendering = function (target) {
         this._rendering = true;
-        this._scene = scene;
+        this._renderTarget = target;
         requestAnimationFrame(this.renderFrame.bind(this));
     };
     Renderer.prototype.stopRendering = function () {
         this._rendering = false;
-        this._scene = null;
+        this._renderTarget = null;
     };
     Renderer.prototype.resize = function (width, height) {
         this._canvas.width = width;
@@ -64,6 +65,13 @@ var Renderer = (function (_super) {
         a.setAttribute("download", fname + "." + format);
         a.click();
     };
+    Object.defineProperty(Renderer.prototype, "target", {
+        get: function () {
+            return this._renderTarget;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Renderer.prototype, "canvasWidth", {
         get: function () {
             return this._canvas.width;

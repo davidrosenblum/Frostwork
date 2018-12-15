@@ -1,7 +1,7 @@
 import { GameLayer } from "./Enums";
 import { LayeredMapConfig, GeneratedMapData } from "./Interfaces";
 import { Object2D } from "./Object2D";
-import { Scene } from "./Scene";
+import { Sprite } from "./Sprite";
 export declare class MapLayers {
     private _container;
     private _layers;
@@ -17,5 +17,5 @@ export declare class MapLayers {
     private forEachScene;
     depthSort(): void;
     countChildren(): number;
-    readonly scene: Scene;
+    readonly mapSprite: Sprite;
 }

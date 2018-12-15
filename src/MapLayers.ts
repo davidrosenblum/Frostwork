@@ -60,6 +60,11 @@ export class MapLayers{
             if(this.add(object, layer)){
                 object.x = col * this._mapGrid.width;
                 object.y = row * this._mapGrid.height;
+
+                if(object.height > this._mapGrid.height){
+                    object.height -= (this._mapGrid.height);
+                }
+
                 return true;
             }
             return false;
@@ -101,8 +106,8 @@ export class MapLayers{
         return num;
     }
 
-    public get scene():Scene{
-        return this._container.scene;
+    public get mapSprite():Sprite{
+        return this._container;
     }
 }
 

@@ -74,6 +74,7 @@ var GameEntity = (function (_super) {
             y = bounds.y;
         }
         if (scroller) {
+            scroller.scrollYWith(this, y - this.y);
         }
         this.y = y;
         this.facing = "up";
@@ -96,6 +97,7 @@ var GameEntity = (function (_super) {
             }
         }
         if (scroller) {
+            scroller.scrollYWith(this, y - this.y);
         }
         this.y = y;
         this.facing = "down";
@@ -115,6 +117,9 @@ var GameEntity = (function (_super) {
             x = bounds.x;
         }
         if (scroller) {
+            if (scroller) {
+                scroller.scrollXWith(this, x - this.x);
+            }
         }
         this.x = x;
         this.facing = "left";
@@ -137,6 +142,7 @@ var GameEntity = (function (_super) {
             }
         }
         if (scroller) {
+            scroller.scrollXWith(this, x - this.x);
         }
         this.x = x;
         this.facing = "right";
