@@ -1,5 +1,5 @@
 import { CollisionGrid } from "./CollisionGrid";
-import { MapConfig, GameMapConfig, GameMapLayerConfig } from "./Interfaces";
+import { MapConfig, LayeredMapConfig, LayeredMapLayerConfig } from "./Interfaces";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
 
@@ -40,12 +40,12 @@ export class MapUtils{
         return grid;
     }
 
-    public static buildLayerMap(config:GameMapConfig, backgroundScene:Scene=null, midgroundScene:Scene=null, foregroundScene:Scene=null):CollisionGrid<Sprite>{
+    public static buildLayerMap(config:LayeredMapConfig, backgroundScene:Scene, midgroundScene:Scene, foregroundScene:Scene):CollisionGrid<Sprite>{
         let collisionGrid:CollisionGrid<Sprite> = null;
 
         let scenes:Scene[] = [backgroundScene, midgroundScene, foregroundScene];
 
-        let layerConfigs:GameMapLayerConfig[] = [config.background || null, config.midground || null, config.foreground || null];
+        let layerConfigs:LayeredMapLayerConfig[] = [config.background || null, config.midground || null, config.foreground || null];
 
         layerConfigs.forEach((layerConfig, index) => {
             if(layerConfig){

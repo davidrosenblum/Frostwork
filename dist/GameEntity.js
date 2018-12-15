@@ -14,14 +14,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimatedSprite_1 = require("./AnimatedSprite");
-var Enums_1 = require("./Enums");
 var TextField_1 = require("./TextField");
 var GameEntity = (function (_super) {
     __extends(GameEntity, _super);
     function GameEntity(image, width, height, x, y) {
         var _this = _super.call(this, image, width, height, x, y) || this;
         _this._moveSpeed = 1;
-        _this._facing = Enums_1.GameEntityFacing.RIGHT;
+        _this._facing = "right";
         _this.canMove = true;
         return _this;
     }
@@ -46,16 +45,16 @@ var GameEntity = (function (_super) {
     GameEntity.prototype.move = function (grid, bounds, scroller) {
         if (this.canMove) {
             switch (this.facing) {
-                case Enums_1.GameEntityFacing.UP:
+                case "up":
                     this.moveLeft(grid, bounds, scroller);
                     break;
-                case Enums_1.GameEntityFacing.DOWN:
+                case "down":
                     this.moveDown(grid, bounds, scroller);
                     break;
-                case Enums_1.GameEntityFacing.LEFT:
+                case "left":
                     this.moveLeft(grid, bounds, scroller);
                     break;
-                case Enums_1.GameEntityFacing.RIGHT:
+                case "right":
                     this.moveRight(grid, bounds, scroller);
                     break;
             }
@@ -77,7 +76,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.y = y;
-        this.facing = Enums_1.GameEntityFacing.UP;
+        this.facing = "up";
         return null;
     };
     GameEntity.prototype.moveDown = function (grid, bounds, scroller) {
@@ -99,7 +98,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.y = y;
-        this.facing = Enums_1.GameEntityFacing.DOWN;
+        this.facing = "down";
         return null;
     };
     GameEntity.prototype.moveLeft = function (grid, bounds, scroller) {
@@ -118,7 +117,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.x = x;
-        this.facing = Enums_1.GameEntityFacing.LEFT;
+        this.facing = "left";
         return null;
     };
     GameEntity.prototype.moveRight = function (grid, bounds, scroller) {
@@ -140,7 +139,7 @@ var GameEntity = (function (_super) {
         if (scroller) {
         }
         this.x = x;
-        this.facing = Enums_1.GameEntityFacing.RIGHT;
+        this.facing = "right";
         return null;
     };
     Object.defineProperty(GameEntity.prototype, "moveSpeed", {

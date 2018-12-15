@@ -38,14 +38,6 @@ export interface SpriteConfig {
     height?: number;
     depth?: number;
 }
-export interface MapConfig {
-    tileLayout: number[][];
-    tileTypes: (typeof Sprite)[];
-    tileSize: number;
-    scene: Scene;
-    offsetX?: number;
-    offsetY?: number;
-}
 export interface AnimationConfig {
     numFrames: number;
     clipWidth: number;
@@ -71,17 +63,25 @@ export interface GameEntityData {
     objectID: string;
     teamID?: string;
 }
-export interface GameMapLayerConfig {
+export interface MapConfig {
+    tileLayout: number[][];
+    tileTypes: (typeof Sprite)[];
+    tileSize: number;
+    scene?: Scene;
+    offsetX?: number;
+    offsetY?: number;
+}
+export interface LayeredMapLayerConfig {
     tileLayout: number[][];
     tileTypes: (typeof Sprite)[];
     offsetX?: number;
     offsetY?: number;
 }
-export interface GameMapConfig {
+export interface LayeredMapConfig {
     tileSize: number;
-    background?: GameMapLayerConfig;
-    midground?: GameMapLayerConfig;
-    foreground?: GameMapLayerConfig;
+    background?: LayeredMapLayerConfig;
+    midground?: LayeredMapLayerConfig;
+    foreground?: LayeredMapLayerConfig;
 }
 export interface GameMovementKeys {
     up: string[];

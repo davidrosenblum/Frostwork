@@ -6,7 +6,7 @@ export class Scene implements Draw2D{
     private _drawList:SortableDraw2D[];
     private _wrappedObject:Object2D;
 
-    constructor(wrap:Object2D){
+    constructor(wrap:Object2D=null){
         this._childIDs = {};
         this._drawList = [];
         this._wrappedObject = wrap;

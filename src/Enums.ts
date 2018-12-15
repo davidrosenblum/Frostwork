@@ -1,11 +1,11 @@
-export enum GameEntityFacing{
+export const enum GameEntityFacing{
     UP =    "up",
     DOWN =  "down",
     LEFT =  "left",
     RIGHT = "right",
 }
 
-export enum GameLayer{
+export const enum GameLayer{
     BACKGROUND =    1,
     MIDGROUND =     2,
     FOREGROUND =    3,
