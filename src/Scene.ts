@@ -144,11 +144,11 @@ export class Scene implements Draw2D{
     }
 
     public findChildIndex(target:SortableDraw2D):number{
-        this._drawList.forEach((child, index) => {
-            if(child === target){
-                return index;
+        for(let i:number = 0; i < this.numChildren; i++){
+            if(this.getChildAt(i) === target){
+                return i;
             }
-        });
+        }
 
         return -1;
     }

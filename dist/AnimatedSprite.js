@@ -22,6 +22,8 @@ var AnimatedSprite = (function (_super) {
         _this._currFrame = 0;
         _this._animations = {};
         _this._animating = false;
+        _this._framesUntilUpdate = 0;
+        _this._repeatsOfFrameLeft = 0;
         return _this;
     }
     AnimatedSprite.prototype.draw = function (ctx, offsetX, offsetY) {
@@ -33,6 +35,14 @@ var AnimatedSprite = (function (_super) {
                 var x = this.x + offsetX;
                 var y = this.y + offsetY;
                 var anim = this.currentAnimationFrame;
+                if (--this._repeatsOfFrameLeft <= 0) {
+                    if (--this._framesUntilUpdate <= 0) {
+                        this._framesUntilUpdate = this.currentFrameCount;
+                        this.nextFrame();
+                    }
+                    anim = this.currentAnimationFrame;
+                    this._repeatsOfFrameLeft = anim.frameCount;
+                }
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.drawImage(this.imageElement, anim.clipX, anim.clipY, anim.clipWidth, anim.clipHeight, x, y, this.width, this.height);
@@ -66,6 +76,8 @@ var AnimatedSprite = (function (_super) {
     };
     AnimatedSprite.prototype.restartAnimation = function () {
         this._currFrame = 0;
+        this._framesUntilUpdate = this.currentFrameCount;
+        this._repeatsOfFrameLeft = this.currentAnimationFrame.frameCount;
     };
     AnimatedSprite.prototype.setAnimation = function (animationName, frames) {
         var _this = this;

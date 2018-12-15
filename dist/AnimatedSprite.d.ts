@@ -5,6 +5,8 @@ export declare class AnimatedSprite extends Sprite {
     private _currFrame;
     private _animations;
     private _animating;
+    private _framesUntilUpdate;
+    private _repeatsOfFrameLeft;
     constructor(image?: string, width?: number, height?: number, x?: number, y?: number);
     draw(ctx: CanvasRenderingContext2D, offsetX?: number, offsetY?: number): void;
     nextFrame(): void;

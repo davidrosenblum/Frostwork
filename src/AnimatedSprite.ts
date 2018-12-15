@@ -6,6 +6,8 @@ export class AnimatedSprite extends Sprite{
     private _currFrame:number;
     private _animations:{[animation:string]: Array<AnimationFrameData>};
     private _animating:boolean;
+    private _framesUntilUpdate:number;
+    private _repeatsOfFrameLeft:number;
 
     constructor(image?:string, width?:number, height?:number, x?:number, y?:number){
         super(image, width, height, x, y);
@@ -14,6 +16,8 @@ export class AnimatedSprite extends Sprite{
         this._currFrame = 0;
         this._animations = {};
         this._animating = false;
+        this._framesUntilUpdate = 0;
+        this._repeatsOfFrameLeft = 0;
     }
 
     public draw(ctx:CanvasRenderingContext2D, offsetX:number=0, offsetY:number=0):void{
@@ -25,6 +29,16 @@ export class AnimatedSprite extends Sprite{
                 let y:number = this.y + offsetY;
 
                 let anim:AnimationFrameData = this.currentAnimationFrame;
+
+                if(--this._repeatsOfFrameLeft <= 0){
+                    if(--this._framesUntilUpdate <= 0){
+                        this._framesUntilUpdate = this.currentFrameCount;
+                        this.nextFrame();
+                    }
+
+                    anim = this.currentAnimationFrame;
+                    this._repeatsOfFrameLeft = anim.frameCount;
+                }
                 
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
@@ -68,6 +82,8 @@ export class AnimatedSprite extends Sprite{
 
     public restartAnimation():void{
         this._currFrame = 0;
+        this._framesUntilUpdate = this.currentFrameCount;
+        this._repeatsOfFrameLeft = this.currentAnimationFrame.frameCount;
     }
 
     public setAnimation(animationName:string, frames:AnimationFrameData[]):void{

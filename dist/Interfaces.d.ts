@@ -40,7 +40,7 @@ export interface SpriteConfig {
     depth?: number;
 }
 export interface AnimationConfig {
-    numFrames: number;
+    numSrcFrames: number;
     clipWidth: number;
     clipHeight: number;
     marginX?: number;
@@ -48,12 +48,14 @@ export interface AnimationConfig {
     offsetX?: number;
     offsetY?: number;
     axis: "x" | "y";
+    expectedNumFrames?: number;
 }
 export interface AnimationFrameData {
     clipX: number;
     clipY: number;
     clipWidth: number;
     clipHeight: number;
+    frameCount: number;
 }
 export interface GameEntityData {
     x?: number;

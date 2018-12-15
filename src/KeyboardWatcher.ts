@@ -1,10 +1,12 @@
 export class KeyboardWatcher{
     private _keys:{[key:string]: boolean};
     private _numKeys:number;
+    private _onKeys:{[key:string]: ()=>any};
     
     constructor(element?:HTMLElement){
         this._keys = {};
         this._numKeys = 0;
+        this._onKeys = {};
 
         if(!element) element = document.body;
         element.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -24,6 +26,8 @@ export class KeyboardWatcher{
             delete this._keys[key];
             this._numKeys--;
         }
+
+        this.emitOnKey(key);
     }
 
     public forceKeyDown(key:string):void{
@@ -65,6 +69,16 @@ export class KeyboardWatcher{
 
     public allKeysDown(keys:string[]):boolean{
         return !this.anyKeysUp(keys);
+    }
+
+    public onKey(key:string, listener:()=>any):void{
+        this._onKeys[key] = listener;
+    }
+
+    private emitOnKey(key:string):void{
+        if(key in this._onKeys){
+            this._onKeys[key]();
+        }
     }
 
     public get numKeys():number{

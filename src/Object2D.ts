@@ -56,8 +56,13 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
     }
 
     public setParent(parent:Object2D):void{
-        if(parent.scene.containsChild(this)){
-            this._parent = parent;
+        if(parent){
+            if(parent.scene.containsChild(this)){
+                this._parent = parent;
+            }
+        }
+        else{
+            this._parent = null;
         }
     }
 

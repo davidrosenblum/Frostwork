@@ -54,8 +54,13 @@ var Object2D = (function (_super) {
         this._collisionBounds = { width: width, height: height };
     };
     Object2D.prototype.setParent = function (parent) {
-        if (parent.scene.containsChild(this)) {
-            this._parent = parent;
+        if (parent) {
+            if (parent.scene.containsChild(this)) {
+                this._parent = parent;
+            }
+        }
+        else {
+            this._parent = null;
         }
     };
     Object2D.prototype.getBoundingBox = function () {

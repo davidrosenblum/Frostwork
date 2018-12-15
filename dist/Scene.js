@@ -114,11 +114,11 @@ var Scene = (function () {
         return target.id in this._childIDs;
     };
     Scene.prototype.findChildIndex = function (target) {
-        this._drawList.forEach(function (child, index) {
-            if (child === target) {
-                return index;
+        for (var i = 0; i < this.numChildren; i++) {
+            if (this.getChildAt(i) === target) {
+                return i;
             }
-        });
+        }
         return -1;
     };
     Scene.prototype.forEachChild = function (fn) {

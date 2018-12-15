@@ -4,6 +4,7 @@ var KeyboardWatcher = (function () {
     function KeyboardWatcher(element) {
         this._keys = {};
         this._numKeys = 0;
+        this._onKeys = {};
         if (!element)
             element = document.body;
         element.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -20,6 +21,7 @@ var KeyboardWatcher = (function () {
             delete this._keys[key];
             this._numKeys--;
         }
+        this.emitOnKey(key);
     };
     KeyboardWatcher.prototype.forceKeyDown = function (key) {
         if (this.isKeyUp(key)) {
@@ -56,6 +58,14 @@ var KeyboardWatcher = (function () {
     };
     KeyboardWatcher.prototype.allKeysDown = function (keys) {
         return !this.anyKeysUp(keys);
+    };
+    KeyboardWatcher.prototype.onKey = function (key, listener) {
+        this._onKeys[key] = listener;
+    };
+    KeyboardWatcher.prototype.emitOnKey = function (key) {
+        if (key in this._onKeys) {
+            this._onKeys[key]();
+        }
     };
     Object.defineProperty(KeyboardWatcher.prototype, "numKeys", {
         get: function () {

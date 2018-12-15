@@ -1,6 +1,7 @@
 export declare class KeyboardWatcher {
     private _keys;
     private _numKeys;
+    private _onKeys;
     constructor(element?: HTMLElement);
     private handleKeyUp;
     private handleKeyDown;
@@ -12,5 +13,7 @@ export declare class KeyboardWatcher {
     anyKeysDown(keys: string[]): boolean;
     allKeysUp(keys: string[]): boolean;
     allKeysDown(keys: string[]): boolean;
+    onKey(key: string, listener: () => any): void;
+    private emitOnKey;
     readonly numKeys: number;
 }
