@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var EventEmitter_1 = require("./EventEmitter");
 var TokenGenerator_1 = require("./TokenGenerator");
+var BoundingBox_1 = require("./BoundingBox");
 var DisplayObject = (function (_super) {
     __extends(DisplayObject, _super);
     function DisplayObject(width, height, x, y) {
@@ -24,27 +25,27 @@ var DisplayObject = (function (_super) {
         if (y === void 0) { y = 0; }
         var _this = _super.call(this) || this;
         _this._id = DisplayObject.tokens.nextToken();
-        _this._position = { x: x, y: y };
-        _this._size = { width: width, height: height };
+        _this._bounds = new BoundingBox_1.BoundingBox(x, y, width, height);
         _this._alpha = 1;
         _this.visible = true;
         return _this;
     }
     DisplayObject.prototype.setPosition = function (x, y) {
-        this._position.x = x;
-        this._position.y = y;
+        this._bounds.x = x;
+        this._bounds.y = y;
         this.emit("move");
     };
     DisplayObject.prototype.setSize = function (width, height) {
-        this._size = { width: width, height: height };
+        this._bounds.width = width;
+        this._bounds.height = height;
         this.emit("resize");
     };
     Object.defineProperty(DisplayObject.prototype, "x", {
         get: function () {
-            return this._position.x;
+            return this._bounds.x;
         },
         set: function (x) {
-            this._position.x = x;
+            this._bounds.x = x;
             this.emit("move");
         },
         enumerable: true,
@@ -52,10 +53,10 @@ var DisplayObject = (function (_super) {
     });
     Object.defineProperty(DisplayObject.prototype, "y", {
         get: function () {
-            return this._position.y;
+            return this._bounds.y;
         },
         set: function (y) {
-            this._position.y = y;
+            this._bounds.y = y;
             this.emit("move");
         },
         enumerable: true,
@@ -63,10 +64,10 @@ var DisplayObject = (function (_super) {
     });
     Object.defineProperty(DisplayObject.prototype, "width", {
         get: function () {
-            return this._size.width;
+            return this._bounds.width;
         },
         set: function (width) {
-            this._size.width = width;
+            this._bounds.width = width;
             this.emit("resize");
         },
         enumerable: true,
@@ -74,10 +75,10 @@ var DisplayObject = (function (_super) {
     });
     Object.defineProperty(DisplayObject.prototype, "height", {
         get: function () {
-            return this._size.height;
+            return this._bounds.height;
         },
         set: function (height) {
-            this._size.height = height;
+            this._bounds.height = height;
             this.emit("resize");
         },
         enumerable: true,
@@ -95,21 +96,20 @@ var DisplayObject = (function (_super) {
     });
     Object.defineProperty(DisplayObject.prototype, "position", {
         get: function () {
-            return this._position;
+            return {
+                x: this._bounds.x,
+                y: this._bounds.y
+            };
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(DisplayObject.prototype, "size", {
         get: function () {
-            return this._size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DisplayObject.prototype, "bottom", {
-        get: function () {
-            return this.y + this.height;
+            return {
+                width: this._bounds.width,
+                height: this._bounds.height
+            };
         },
         enumerable: true,
         configurable: true
@@ -124,6 +124,13 @@ var DisplayObject = (function (_super) {
     Object.defineProperty(DisplayObject.prototype, "centerY", {
         get: function () {
             return this.y + this.height / 2;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DisplayObject.prototype, "bottom", {
+        get: function () {
+            return this.y + this.height;
         },
         enumerable: true,
         configurable: true

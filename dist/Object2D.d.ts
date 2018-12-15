@@ -1,6 +1,6 @@
 import { BoundingBox } from "./BoundingBox";
 import { DisplayObject } from "./DisplayObject";
-import { Size, SortableDraw2D } from "./Interfaces";
+import { Size, SortableDraw2D, Point } from "./Interfaces";
 import { Scene } from "./Scene";
 export declare abstract class Object2D extends DisplayObject implements SortableDraw2D {
     private _collisionBounds;
@@ -16,6 +16,7 @@ export declare abstract class Object2D extends DisplayObject implements Sortable
     setParent(parent: Object2D): void;
     getBoundingBox(): BoundingBox;
     getCollisionBox(): BoundingBox;
+    getCoords(tileSize: number): Point;
     readonly collisionBounds: Size;
     readonly scene: Scene;
     readonly parent: Object2D;

@@ -1,6 +1,6 @@
 import { BoundingBox } from "./BoundingBox";
 import { DisplayObject } from "./DisplayObject";
-import { Size, SortableDraw2D } from "./Interfaces";
+import { Size, SortableDraw2D, Point } from "./Interfaces";
 import { Scene } from "./Scene";
 
 export abstract class Object2D extends DisplayObject implements SortableDraw2D{
@@ -74,6 +74,14 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
             return new BoundingBox(x, y, this._collisionBounds.width, this._collisionBounds.height);
         }
         return this.getBoundingBox();
+    }
+
+    public getCoords(tileSize:number):Point{
+        let cb:BoundingBox = this.getCollisionBox();
+        return {
+            x: Math.floor(cb.centerX / tileSize),
+            y: Math.floor(cb.y / tileSize)
+        };
     }
 
     public get collisionBounds():Size{

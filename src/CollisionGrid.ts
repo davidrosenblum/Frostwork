@@ -1,6 +1,7 @@
 import { Point } from "./Interfaces";
+import { Object2D } from "./Object2D";
 
-export class CollisionGrid<T>{
+export class CollisionGrid<T extends Object2D>{
     private _grid:T[][];
     private _tileSize:number;
 
@@ -14,22 +15,26 @@ export class CollisionGrid<T>{
         }
     }
 
-    public checkInBounds(row:number, col:number):boolean{
+    public checkInBounds(col:number, row:number):boolean{
         return (row >= 0 && row < this._grid[0].length) &&
             (col >= 0 && col < this._grid.length);
     }
 
-    public storeObjectAt(object:T, row:number, col:number):void{
-        if(this.checkInBounds(row, col)){
+    public storeObjectAt(object:T, col:number, row:number):void{
+        if(this.checkInBounds(col, row)){
             this._grid[row][col] = object;
         }
     }
 
-    public getObjectAt(row:number, col:number):T{
+    public getObjectAt(col:number, row:number):T{
         if(this.checkInBounds(row, col)){
             return this._grid[row][col] || null;
         }
         return null;
+    }
+
+    public getObjectAtPoint(point:Point):T{
+        return this.getObjectAt(point.x, point.y);
     }
 
     public getObjectAtPixels(x:number, y:number):T{
@@ -39,7 +44,12 @@ export class CollisionGrid<T>{
         return this.getObjectAt(row, col);  // checks bounds
     }
 
-    public getObjectAtPoint(point:Point):T{
+    public getObjectAtPixelsPoint(point:Point):T{
         return this.getObjectAtPixels(point.x, point.y);  // checks bounds
+    }
+
+    public getObjectAtTarget(target:Object2D):T{
+        let pt:Point = target.getCoords(this._tileSize);
+        return this.getObjectAtPoint(pt);
     }
 }

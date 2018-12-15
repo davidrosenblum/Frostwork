@@ -69,6 +69,13 @@ var Object2D = (function (_super) {
         }
         return this.getBoundingBox();
     };
+    Object2D.prototype.getCoords = function (tileSize) {
+        var cb = this.getCollisionBox();
+        return {
+            x: Math.floor(cb.centerX / tileSize),
+            y: Math.floor(cb.y / tileSize)
+        };
+    };
     Object.defineProperty(Object2D.prototype, "collisionBounds", {
         get: function () {
             return this._collisionBounds || this.size;

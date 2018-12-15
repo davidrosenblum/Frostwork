@@ -21,7 +21,9 @@ var MapUtils = (function () {
                     if (tile.height > tileSize) {
                         tile.y -= (tile.height - tileSize);
                     }
-                    collisionGrid.storeObjectAt(tile, row, col);
+                    if (tile.width > tileSize) {
+                    }
+                    collisionGrid.storeObjectAt(tile, col, row);
                     if (config.scene) {
                         config.scene.addChild(tile);
                     }
