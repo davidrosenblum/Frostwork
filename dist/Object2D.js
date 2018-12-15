@@ -69,11 +69,13 @@ var Object2D = (function (_super) {
         }
         return this.getBoundingBox();
     };
-    Object2D.prototype.getCoords = function (tileSize) {
+    Object2D.prototype.getCoords = function (tileSize, offsetX, offsetY) {
+        if (offsetX === void 0) { offsetX = 0; }
+        if (offsetY === void 0) { offsetY = 0; }
         var cb = this.getCollisionBox();
         return {
-            x: Math.floor(cb.centerX / tileSize),
-            y: Math.floor(cb.y / tileSize)
+            x: Math.floor((cb.centerX + offsetX) / tileSize),
+            y: Math.floor((cb.centerY + offsetY) / tileSize)
         };
     };
     Object.defineProperty(Object2D.prototype, "collisionBounds", {

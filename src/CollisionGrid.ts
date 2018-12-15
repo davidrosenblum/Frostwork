@@ -11,13 +11,12 @@ export class CollisionGrid<T extends Object2D>{
         //this._grid = new Array<T[]>(rows).fill(new Array<T>(cols).fill(null)); << errors?
         this._grid = new Array<T[]>(rows);
         for(let i:number = 0; i < cols; i++){
-            this._grid[i] = new Array<T>(cols);
+            this._grid[i] = new Array<T>(cols).fill(null);
         }
     }
 
     public checkInBounds(col:number, row:number):boolean{
-        return (row >= 0 && row < this._grid[0].length) &&
-            (col >= 0 && col < this._grid.length);
+        return row in this._grid && col in this._grid[row];
     }
 
     public storeObjectAt(object:T, col:number, row:number):void{
@@ -38,18 +37,19 @@ export class CollisionGrid<T extends Object2D>{
     }
 
     public getObjectAtPixels(x:number, y:number):T{
-        let row:number = Math.round(x / this._tileSize);
-        let col:number = Math.round(y / this._tileSize);
+        let col:number = Math.round(x / this._tileSize);
+        let row:number = Math.round(y / this._tileSize);
 
-        return this.getObjectAt(row, col);  // checks bounds
+        return this.getObjectAt(col, row);  // checks bounds
     }
 
     public getObjectAtPixelsPoint(point:Point):T{
         return this.getObjectAtPixels(point.x, point.y);  // checks bounds
     }
 
-    public getObjectAtTarget(target:Object2D):T{
-        let pt:Point = target.getCoords(this._tileSize);
-        return this.getObjectAtPoint(pt);
+    public getObjectAtTarget(target:Object2D, offsetX?:number, offsetY?:number):T{
+        let pt:Point = target.getCoords(this._tileSize, offsetX, offsetY);
+
+        return this.getObjectAt(pt.x, pt.y);
     }
 }

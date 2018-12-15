@@ -65,7 +65,7 @@ var GameEntity = (function (_super) {
             return null;
         var y = this.y - this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtTarget(this);
+            var hit = grid.getObjectAtTarget(this, 0, -this.collisionBounds.height / 2);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }
@@ -84,7 +84,7 @@ var GameEntity = (function (_super) {
             return null;
         var y = this.y + this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtTarget(this);
+            var hit = grid.getObjectAtTarget(this, 0, this.collisionBounds.height / 2);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }
@@ -106,7 +106,7 @@ var GameEntity = (function (_super) {
             return null;
         var x = this.x - this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtTarget(this);
+            var hit = grid.getObjectAtTarget(this, -this.collisionBounds.width / 2);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }
@@ -125,7 +125,7 @@ var GameEntity = (function (_super) {
             return null;
         var x = this.x + this.moveSpeed;
         if (grid) {
-            var hit = grid.getObjectAtTarget(this);
+            var hit = grid.getObjectAtTarget(this, this.collisionBounds.width / 2);
             if (hit && this.collisionTest(hit)) {
                 return hit;
             }

@@ -68,7 +68,7 @@ export class GameEntity extends AnimatedSprite{
         let y:number = this.y - this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtTarget(this);
+            let hit:Sprite = grid.getObjectAtTarget(this, 0, -this.collisionBounds.height / 2);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }
@@ -94,7 +94,7 @@ export class GameEntity extends AnimatedSprite{
         let y:number = this.y + this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtTarget(this);
+            let hit:Sprite = grid.getObjectAtTarget(this, 0, this.collisionBounds.height / 2);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }
@@ -123,7 +123,7 @@ export class GameEntity extends AnimatedSprite{
         let x:number = this.x - this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtTarget(this);
+            let hit:Sprite = grid.getObjectAtTarget(this, -this.collisionBounds.width / 2);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }
@@ -149,7 +149,7 @@ export class GameEntity extends AnimatedSprite{
         let x:number = this.x + this.moveSpeed;
 
         if(grid){
-            let hit:Sprite = grid.getObjectAtTarget(this);
+            let hit:Sprite = grid.getObjectAtTarget(this, this.collisionBounds.width / 2);
             if(hit && this.collisionTest(hit)){
                 return hit;
             }

@@ -5,12 +5,11 @@ var CollisionGrid = (function () {
         this._tileSize = tileSize;
         this._grid = new Array(rows);
         for (var i = 0; i < cols; i++) {
-            this._grid[i] = new Array(cols);
+            this._grid[i] = new Array(cols).fill(null);
         }
     }
     CollisionGrid.prototype.checkInBounds = function (col, row) {
-        return (row >= 0 && row < this._grid[0].length) &&
-            (col >= 0 && col < this._grid.length);
+        return row in this._grid && col in this._grid[row];
     };
     CollisionGrid.prototype.storeObjectAt = function (object, col, row) {
         if (this.checkInBounds(col, row)) {
@@ -27,16 +26,16 @@ var CollisionGrid = (function () {
         return this.getObjectAt(point.x, point.y);
     };
     CollisionGrid.prototype.getObjectAtPixels = function (x, y) {
-        var row = Math.round(x / this._tileSize);
-        var col = Math.round(y / this._tileSize);
-        return this.getObjectAt(row, col);
+        var col = Math.round(x / this._tileSize);
+        var row = Math.round(y / this._tileSize);
+        return this.getObjectAt(col, row);
     };
     CollisionGrid.prototype.getObjectAtPixelsPoint = function (point) {
         return this.getObjectAtPixels(point.x, point.y);
     };
-    CollisionGrid.prototype.getObjectAtTarget = function (target) {
-        var pt = target.getCoords(this._tileSize);
-        return this.getObjectAtPoint(pt);
+    CollisionGrid.prototype.getObjectAtTarget = function (target, offsetX, offsetY) {
+        var pt = target.getCoords(this._tileSize, offsetX, offsetY);
+        return this.getObjectAt(pt.x, pt.y);
     };
     return CollisionGrid;
 }());

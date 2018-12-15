@@ -10,5 +10,5 @@ export declare class CollisionGrid<T extends Object2D> {
     getObjectAtPoint(point: Point): T;
     getObjectAtPixels(x: number, y: number): T;
     getObjectAtPixelsPoint(point: Point): T;
-    getObjectAtTarget(target: Object2D): T;
+    getObjectAtTarget(target: Object2D, offsetX?: number, offsetY?: number): T;
 }

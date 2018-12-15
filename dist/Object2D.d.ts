@@ -16,7 +16,7 @@ export declare abstract class Object2D extends DisplayObject implements Sortable
     setParent(parent: Object2D): void;
     getBoundingBox(): BoundingBox;
     getCollisionBox(): BoundingBox;
-    getCoords(tileSize: number): Point;
+    getCoords(tileSize: number, offsetX?: number, offsetY?: number): Point;
     readonly collisionBounds: Size;
     readonly scene: Scene;
     readonly parent: Object2D;

@@ -76,11 +76,11 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
         return this.getBoundingBox();
     }
 
-    public getCoords(tileSize:number):Point{
+    public getCoords(tileSize:number, offsetX:number=0, offsetY:number=0):Point{
         let cb:BoundingBox = this.getCollisionBox();
         return {
-            x: Math.floor(cb.centerX / tileSize),
-            y: Math.floor(cb.y / tileSize)
+            x: Math.floor((cb.centerX + offsetX) / tileSize),
+            y: Math.floor((cb.centerY + offsetY) / tileSize)
         };
     }
 
