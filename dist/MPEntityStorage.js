@@ -14,7 +14,10 @@ var MPEntityStorage = (function () {
         return false;
     };
     MPEntityStorage.prototype.removeObject = function (object) {
-        if (delete this._objects[object.objectID]) {
+        return this.removeObjectById(object.objectID);
+    };
+    MPEntityStorage.prototype.removeObjectById = function (id) {
+        if (delete this._objects[id]) {
             this._numObjects--;
             return true;
         }

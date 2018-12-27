@@ -11,7 +11,7 @@ export declare class MapLayers {
     private createMapGrid;
     buildMap(config: LayeredMapConfig): GeneratedMapData;
     addAt(object: Object2D, col: number, row: number, layer?: GameLayer): boolean;
-    add(object: Object2D, layer?: GameLayer): boolean;
+    add(object: Object2D, layer?: GameLayer, depthSort?: boolean): boolean;
     remove(object: Object2D, layer?: GameLayer): boolean;
     removeAll(): void;
     private forEachScene;
