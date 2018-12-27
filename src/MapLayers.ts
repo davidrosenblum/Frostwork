@@ -47,12 +47,16 @@ export class MapLayers{
     public buildMap(config:LayeredMapConfig):GeneratedMapData{
         this.createMapGrid(config);
 
-        return MapUtils.buildLayerMap(
+        let gmd:GeneratedMapData = MapUtils.buildLayerMap(
             config,
             this._layers[GameLayer.BACKGROUND].scene,
             this._layers[GameLayer.MIDGROUND].scene,
             this._layers[GameLayer.FOREGROUND].scene
         );
+
+        this.depthSort();
+
+        return gmd;
     }
 
     public addAt(object:Object2D, col:number, row:number, layer:GameLayer=GameLayer.MIDGROUND):boolean{
@@ -72,9 +76,15 @@ export class MapLayers{
         else throw new Error("Unable to 'addAt()' if no map has been generated");
     }
 
-    public add(object:Object2D, layer:GameLayer=GameLayer.MIDGROUND):boolean{
+    public add(object:Object2D, layer:GameLayer=GameLayer.MIDGROUND, depthSort:boolean=true):boolean{
         if(layer in this._layers){
-            return this._layers[layer].scene.addChild(object);
+            if(this._layers[layer].scene.addChild(object)){
+                if(depthSort){
+                    this.depthSort();
+                }
+                return true;
+            }
+            return false;
         }
         else throw new InvalidLayerError();
     }

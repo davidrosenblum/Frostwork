@@ -6,6 +6,7 @@ export declare class MPEntityStorage {
     constructor();
     addObject(object: MPGameEntity): boolean;
     removeObject(object: MPGameEntity): boolean;
+    removeObjectById(id: string): boolean;
     updateObject(data: GameEntityData): boolean;
     clear(): void;
     containsObject(object: MPGameEntity | string): boolean;

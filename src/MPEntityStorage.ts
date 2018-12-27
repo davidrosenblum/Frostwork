@@ -20,7 +20,11 @@ export class MPEntityStorage{
     }
 
     public removeObject(object:MPGameEntity):boolean{
-        if(delete this._objects[object.objectID]){
+        return this.removeObjectById(object.objectID);
+    }
+
+    public removeObjectById(id:string):boolean{
+        if(delete this._objects[id]){
             this._numObjects--;
             return true;
         }

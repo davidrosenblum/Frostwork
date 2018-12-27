@@ -44,7 +44,9 @@ var MapLayers = (function () {
     };
     MapLayers.prototype.buildMap = function (config) {
         this.createMapGrid(config);
-        return MapUtils_1.MapUtils.buildLayerMap(config, this._layers[1].scene, this._layers[2].scene, this._layers[3].scene);
+        var gmd = MapUtils_1.MapUtils.buildLayerMap(config, this._layers[1].scene, this._layers[2].scene, this._layers[3].scene);
+        this.depthSort();
+        return gmd;
     };
     MapLayers.prototype.addAt = function (object, col, row, layer) {
         if (layer === void 0) { layer = 2; }
@@ -62,10 +64,17 @@ var MapLayers = (function () {
         else
             throw new Error("Unable to 'addAt()' if no map has been generated");
     };
-    MapLayers.prototype.add = function (object, layer) {
+    MapLayers.prototype.add = function (object, layer, depthSort) {
         if (layer === void 0) { layer = 2; }
+        if (depthSort === void 0) { depthSort = true; }
         if (layer in this._layers) {
-            return this._layers[layer].scene.addChild(object);
+            if (this._layers[layer].scene.addChild(object)) {
+                if (depthSort) {
+                    this.depthSort();
+                }
+                return true;
+            }
+            return false;
         }
         else
             throw new Errors_1.InvalidLayerError();
