@@ -77,7 +77,7 @@ var AnimatedSprite = (function (_super) {
     AnimatedSprite.prototype.restartAnimation = function () {
         this._currFrame = 0;
         this._framesUntilUpdate = this.currentFrameCount;
-        this._repeatsOfFrameLeft = this.currentAnimationFrame.frameCount;
+        this._repeatsOfFrameLeft = this.currentAnimationFrame ? this.currentAnimationFrame.frameCount : 0;
     };
     AnimatedSprite.prototype.setAnimation = function (animationName, frames) {
         var _this = this;

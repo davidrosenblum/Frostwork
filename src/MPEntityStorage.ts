@@ -11,7 +11,7 @@ export class MPEntityStorage{
     }
 
     public addObject(object:MPGameEntity):boolean{
-        if(this.containsObject(object)){
+        if(!this.containsObject(object)){
             this._objects[object.objectID] = object;
             this._numObjects++;
             return true;

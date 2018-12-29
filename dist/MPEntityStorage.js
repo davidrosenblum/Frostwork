@@ -6,7 +6,7 @@ var MPEntityStorage = (function () {
         this._numObjects = 0;
     }
     MPEntityStorage.prototype.addObject = function (object) {
-        if (this.containsObject(object)) {
+        if (!this.containsObject(object)) {
             this._objects[object.objectID] = object;
             this._numObjects++;
             return true;

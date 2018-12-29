@@ -49,6 +49,7 @@ export interface SpriteConfig{
 
 export interface AnimationConfig{
     numSrcFrames:number;
+    numRepeatFrames?:number;
     clipWidth:number;
     clipHeight:number;
     marginX?:number;
@@ -56,7 +57,6 @@ export interface AnimationConfig{
     offsetX?:number;
     offsetY?:number;
     axis:"x"|"y";
-    expectedNumFrames?:number;
 }
 
 export interface AnimationFrameData{

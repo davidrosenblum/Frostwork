@@ -83,7 +83,7 @@ export class AnimatedSprite extends Sprite{
     public restartAnimation():void{
         this._currFrame = 0;
         this._framesUntilUpdate = this.currentFrameCount;
-        this._repeatsOfFrameLeft = this.currentAnimationFrame.frameCount;
+        this._repeatsOfFrameLeft = this.currentAnimationFrame ? this.currentAnimationFrame.frameCount : 0;
     }
 
     public setAnimation(animationName:string, frames:AnimationFrameData[]):void{
