@@ -1,9 +1,3 @@
-export const enum GameEntityFacing{
-    UP =    "up",
-    DOWN =  "down",
-    LEFT =  "left",
-    RIGHT = "right",
-}
 
 export const enum GameLayer{
     BACKGROUND =    1,

@@ -1,7 +1,12 @@
-import { GameLayer } from "./Enums";
-import { LayeredMapConfig, GeneratedMapData } from "./Interfaces";
+import { GeneratedMapData, LayeredMapConfig } from "./MapUtils";
 import { Object2D } from "./Object2D";
 import { Sprite } from "./Sprite";
+export declare const enum GameLayer {
+    BACKGROUND = 1,
+    MIDGROUND = 2,
+    FOREGROUND = 3,
+    HUD = 4
+}
 export declare class MapLayers {
     private _container;
     private _layers;
@@ -17,5 +22,6 @@ export declare class MapLayers {
     private forEachScene;
     depthSort(): void;
     countChildren(): number;
+    processClick(evt: MouseEvent): void;
     readonly mapSprite: Sprite;
 }

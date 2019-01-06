@@ -1,7 +1,6 @@
 import { Object2D } from "./Object2D";
-import { SortableDraw2D } from "./Interfaces";
 
-export class TextField extends Object2D implements SortableDraw2D{
+export class TextField extends Object2D{
     private static readonly CANVAS:HTMLCanvasElement = document.createElement("canvas");
     private static readonly CTX:CanvasRenderingContext2D = TextField.CANVAS.getContext("2d");
 

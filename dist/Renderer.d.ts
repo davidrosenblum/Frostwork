@@ -1,4 +1,4 @@
-import { EventEmitter } from "./EventEmitter";
+import { EventEmitter } from "events";
 import { Object2D } from "./Object2D";
 export declare class Renderer extends EventEmitter {
     private _canvas;

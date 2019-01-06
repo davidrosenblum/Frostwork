@@ -1,8 +1,35 @@
 import { CollisionGrid } from "./CollisionGrid";
-import { MapConfig, LayeredMapConfig, LayeredMapLayerConfig, GeneratedMapData } from "./Interfaces";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
 import { BoundingBox } from "./BoundingBox";
+
+export interface MapConfig{
+    tileLayout:number[][];
+    tileTypes:(typeof Sprite)[];
+    tileSize:number;
+    scene?:Scene;
+    offsetX?:number;
+    offsetY?:number;
+}
+
+export interface LayeredMapLayerConfig{
+    tileLayout:number[][];
+    tileTypes:(typeof Sprite)[];
+    offsetX?:number;
+    offsetY?:number;
+}
+
+export interface LayeredMapConfig{
+    tileSize:number;
+    background?:LayeredMapLayerConfig;
+    midground?:LayeredMapLayerConfig;
+    foreground?:LayeredMapLayerConfig;
+}
+
+export interface GeneratedMapData{
+    collisionGrid:CollisionGrid<Sprite>;
+    mapBounds:BoundingBox;
+}
 
 export class MapUtils{
     public static buildGrid(config:MapConfig):GeneratedMapData{

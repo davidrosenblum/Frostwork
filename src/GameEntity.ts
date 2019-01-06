@@ -1,11 +1,17 @@
 import { AnimatedSprite } from "./AnimatedSprite";
-import { BoundingBox } from "./BoundingBox";
 import { CollisionGrid } from "./CollisionGrid";
-import { GameEntityFacing } from "./Enums";
-import { Bounds } from "./Interfaces";
 import { Scroller } from "./Scroller";
 import { Sprite } from "./Sprite";
 import { TextField } from "./TextField";
+import { Bounds } from "./Object2D";
+
+export const enum GameEntityFacing{
+    UP =    "up",
+    DOWN =  "down",
+    LEFT =  "left",
+    RIGHT = "right",
+}
+
 
 export class GameEntity extends AnimatedSprite{
     private _moveSpeed:number;
@@ -196,6 +202,10 @@ export class GameEntity extends AnimatedSprite{
 
     public get facing():GameEntityFacing{
         return this._facing;
+    }
+
+    public get nametagText():string{
+        return this._nametag ? this._nametag.text : null;
     }
 
     public toString(){

@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var EventEmitter_1 = require("./EventEmitter");
+var events_1 = require("events");
 var TokenGenerator_1 = require("./TokenGenerator");
 var BoundingBox_1 = require("./BoundingBox");
 var DisplayObject = (function (_super) {
@@ -151,5 +151,5 @@ var DisplayObject = (function (_super) {
     });
     DisplayObject.tokens = new TokenGenerator_1.TokenGenerator(16);
     return DisplayObject;
-}(EventEmitter_1.EventEmitter));
+}(events_1.EventEmitter));
 exports.DisplayObject = DisplayObject;

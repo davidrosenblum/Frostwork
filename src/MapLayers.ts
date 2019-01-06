@@ -1,12 +1,16 @@
 import { BoundingBox } from "./BoundingBox";
-import { CollisionGrid } from "./CollisionGrid";
-import { GameLayer } from "./Enums";
 import { InvalidLayerError } from "./Errors";
-import { LayeredMapConfig, GeneratedMapData } from "./Interfaces";
-import { MapUtils } from "./MapUtils";
+import { MapUtils, GeneratedMapData, LayeredMapConfig } from "./MapUtils";
 import { Object2D } from "./Object2D";
 import { Scene } from "./Scene";
 import { Sprite } from "./Sprite";
+
+export const enum GameLayer{
+    BACKGROUND =    1,
+    MIDGROUND =     2,
+    FOREGROUND =    3,
+    HUD =           4
+}
 
 export class MapLayers{
     private _container:Sprite;
@@ -114,6 +118,23 @@ export class MapLayers{
         let num:number = 0;
         this.forEachScene(scene => num += scene.numChildren);
         return num;
+    }
+
+    public processClick(evt:MouseEvent):void{
+        let layer:Sprite = this._layers[GameLayer.MIDGROUND];
+        let x:number = layer.x + evt.clientX;
+        let y:number = layer.y + evt.clientY;
+
+        let mouseBox:BoundingBox = new BoundingBox(x, y, 3, 3);
+
+        this._layers[GameLayer.MIDGROUND].scene.forEachChild(child => {
+            if(child.getBoundingBox().hitBoxTest(mouseBox)){
+                child.emit("click", {
+                    x: x + child.x,
+                    y: y + child.y
+                });
+            }
+        });
     }
 
     public get mapSprite():Sprite{

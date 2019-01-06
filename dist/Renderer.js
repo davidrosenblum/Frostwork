@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var EventEmitter_1 = require("./EventEmitter");
+var events_1 = require("events");
 var Renderer = (function (_super) {
     __extends(Renderer, _super);
     function Renderer(width, height) {
@@ -25,6 +25,7 @@ var Renderer = (function (_super) {
         _this._renderTarget = null;
         _this._rendering = false;
         _this.resize(width, height);
+        _this._canvas.addEventListener("click", function (evt) { return _this.emit("click", evt); });
         return _this;
     }
     Renderer.prototype.clear = function () {
@@ -101,5 +102,5 @@ var Renderer = (function (_super) {
         configurable: true
     });
     return Renderer;
-}(EventEmitter_1.EventEmitter));
+}(events_1.EventEmitter));
 exports.Renderer = Renderer;

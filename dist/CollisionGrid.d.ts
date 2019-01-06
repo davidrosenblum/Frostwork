@@ -1,4 +1,4 @@
-import { Point } from "./Interfaces";
+import { Point } from "./DisplayObject";
 import { Object2D } from "./Object2D";
 export declare class CollisionGrid<T extends Object2D> {
     private _grid;

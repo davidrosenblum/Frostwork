@@ -173,6 +173,13 @@ var GameEntity = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(GameEntity.prototype, "nametagText", {
+        get: function () {
+            return this._nametag ? this._nametag.text : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
     GameEntity.prototype.toString = function () {
         return "[object GameEntity]";
     };

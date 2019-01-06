@@ -1,5 +1,12 @@
-import { SpriteConfig } from "./Interfaces";
 import { Object2D } from "./Object2D";
+export interface SpriteConfig {
+    image: string;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    depth?: number;
+}
 export declare class Sprite extends Object2D {
     private static readonly EMPTY_IMAGE;
     static badImage: HTMLImageElement;

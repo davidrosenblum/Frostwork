@@ -28,6 +28,12 @@ var Object2D = (function (_super) {
     Object2D.prototype.drawChildren = function (ctx, x, y) {
         this._scene.draw(ctx, x, y);
     };
+    Object2D.prototype.drawHitbox = function (ctx, x, y, strokeStyle) {
+        ctx.save();
+        ctx.strokeStyle = strokeStyle || "red";
+        ctx.strokeRect(x + this.x, y + this.y, this.width, this.height);
+        ctx.restore();
+    };
     Object2D.prototype.remove = function () {
         if (this._parent) {
             this._parent.scene.removeChild(this);
@@ -55,7 +61,7 @@ var Object2D = (function (_super) {
     };
     Object2D.prototype.setParent = function (parent) {
         if (parent) {
-            if (parent.scene.containsChild(this)) {
+            if (parent.scene.containsChild(this) || parent.scene.addChild(this)) {
                 this._parent = parent;
             }
         }

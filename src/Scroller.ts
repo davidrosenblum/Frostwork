@@ -1,7 +1,6 @@
 import { BoundingBox } from "./BoundingBox";
-import { Bounds } from "./Interfaces";
 import { Renderer } from "./Renderer";
-import { Object2D } from "./Object2D";
+import { Object2D, Bounds } from "./Object2D";
 
 export class Scroller{
     private _renderer:Renderer;

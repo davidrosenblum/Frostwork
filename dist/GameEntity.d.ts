@@ -1,9 +1,14 @@
 import { AnimatedSprite } from "./AnimatedSprite";
 import { CollisionGrid } from "./CollisionGrid";
-import { GameEntityFacing } from "./Enums";
-import { Bounds } from "./Interfaces";
 import { Scroller } from "./Scroller";
 import { Sprite } from "./Sprite";
+import { Bounds } from "./Object2D";
+export declare const enum GameEntityFacing {
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right"
+}
 export declare class GameEntity extends AnimatedSprite {
     private _moveSpeed;
     private _facing;
@@ -19,5 +24,6 @@ export declare class GameEntity extends AnimatedSprite {
     moveRight(grid: CollisionGrid<Sprite>, bounds?: Bounds, scroller?: Scroller): Sprite;
     moveSpeed: number;
     facing: GameEntityFacing;
+    readonly nametagText: string;
     toString(): string;
 }

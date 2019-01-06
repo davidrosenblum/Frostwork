@@ -1,4 +1,22 @@
-import { AnimationConfig, AnimationFrameData } from "./Interfaces";
+export interface AnimationFrameData{
+    clipX:number;
+    clipY:number;
+    clipWidth:number;
+    clipHeight:number;
+    frameCount:number;
+}
+
+export interface AnimationConfig{
+    numSrcFrames:number;
+    numRepeatFrames?:number;
+    clipWidth:number;
+    clipHeight:number;
+    marginX?:number;
+    marginY?:number;
+    offsetX?:number;
+    offsetY?:number;
+    axis:"x"|"y";
+}
 
 export class AnimationUtils{
     public static createAnimation(config:AnimationConfig):AnimationFrameData[]{

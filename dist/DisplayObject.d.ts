@@ -1,5 +1,15 @@
-import { EventEmitter } from "./EventEmitter";
-import { Draw2D, Point, Size } from "./Interfaces";
+import { EventEmitter } from "events";
+export interface Draw2D {
+    draw(ctx: CanvasRenderingContext2D, offsetX: number, offsetY: number): void;
+}
+export interface Point {
+    x: number;
+    y: number;
+}
+export interface Size {
+    width: number;
+    height: number;
+}
 export declare abstract class DisplayObject extends EventEmitter implements Draw2D, Point, Size {
     private static tokens;
     private _id;

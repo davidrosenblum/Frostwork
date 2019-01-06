@@ -1,5 +1,13 @@
-import { GameEntity } from "./GameEntity";
-import { GameEntityData } from "./Interfaces";
+import { GameEntity, GameEntityFacing } from "./GameEntity";
+export interface GameEntityData {
+    x?: number;
+    y?: number;
+    facing?: GameEntityFacing;
+    anim?: string;
+    moveSpeed?: number;
+    objectID: string;
+    teamID?: string;
+}
 export declare class MPGameEntity extends GameEntity {
     private _objectID;
     private _teamID;

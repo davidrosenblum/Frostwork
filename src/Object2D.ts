@@ -1,9 +1,15 @@
 import { BoundingBox } from "./BoundingBox";
-import { DisplayObject } from "./DisplayObject";
-import { Size, SortableDraw2D, Point } from "./Interfaces";
+import { DisplayObject, Point, Size } from "./DisplayObject";
 import { Scene } from "./Scene";
 
-export abstract class Object2D extends DisplayObject implements SortableDraw2D{
+export interface Bounds{
+    x:number;
+    y:number;
+    width:number;
+    height:number;
+}
+
+export abstract class Object2D extends DisplayObject{
     private _collisionBounds:Size;
     private _scene:Scene;
     private _parent:Object2D;
@@ -11,7 +17,6 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
     constructor(width?:number, height?:number, x?:number, y?:number){
         super(width, height, x, y);
 
-        
         this._parent = null;
 
         this._collisionBounds = null;
@@ -21,6 +26,13 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
 
     protected drawChildren(ctx:CanvasRenderingContext2D, x:number, y:number):void{
         this._scene.draw(ctx, x, y);
+    }
+
+    public drawHitbox(ctx:CanvasRenderingContext2D, x:number, y:number, strokeStyle?:string):void{
+        ctx.save();
+        ctx.strokeStyle = strokeStyle || "red";
+        ctx.strokeRect(x + this.x, y + this.y, this.width, this.height);
+        ctx.restore();
     }
 
     public remove():void{
@@ -57,7 +69,7 @@ export abstract class Object2D extends DisplayObject implements SortableDraw2D{
 
     public setParent(parent:Object2D):void{
         if(parent){
-            if(parent.scene.containsChild(this)){
+            if(parent.scene.containsChild(this) || parent.scene.addChild(this)){
                 this._parent = parent;
             }
         }

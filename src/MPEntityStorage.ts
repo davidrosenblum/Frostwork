@@ -1,5 +1,4 @@
-import { GameEntityData } from "./Interfaces";
-import { MPGameEntity } from "./MPGameEntity";
+import { MPGameEntity, GameEntityData } from "./MPGameEntity";
 
 export class MPEntityStorage{
     private _objects:{[id:string]: MPGameEntity};

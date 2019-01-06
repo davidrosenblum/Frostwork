@@ -1,4 +1,4 @@
-import { AnimationFrameData } from "./Interfaces";
+import { AnimationFrameData } from "./AnimationUtils";
 import { Sprite } from "./Sprite";
 
 export class AnimatedSprite extends Sprite{

@@ -1,4 +1,4 @@
-import { EventEmitter } from "./EventEmitter";
+import { EventEmitter } from "events";
 import { Object2D } from "./Object2D";
 
 export class Renderer extends EventEmitter{
@@ -16,6 +16,8 @@ export class Renderer extends EventEmitter{
         this._rendering = false;
 
         this.resize(width, height);
+
+        this._canvas.addEventListener("click", evt => this.emit("click", evt));
     }   
 
     private clear():void{

@@ -1,4 +1,5 @@
-import { Bounds, Point } from "./Interfaces";
+import { Bounds } from "./Object2D";
+import { Point } from "./DisplayObject";
 
 export class BoundingBox implements Bounds, Point{
     public x:number;

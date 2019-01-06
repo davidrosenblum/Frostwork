@@ -1,9 +1,9 @@
-import { Draw2D, SortableDraw2D } from "./Interfaces";
+import { Draw2D } from "./DisplayObject";
 import { Object2D } from "./Object2D";
 
 export class Scene implements Draw2D{
-    private _childIDs:{[id:string]:SortableDraw2D};
-    private _drawList:SortableDraw2D[];
+    private _childIDs:{[id:string]:Object2D};
+    private _drawList:Object2D[];
     private _wrappedObject:Object2D;
 
     constructor(wrap:Object2D=null){
@@ -16,14 +16,14 @@ export class Scene implements Draw2D{
         this._drawList.forEach(child => child.draw(ctx, offsetX, offsetY));
     }
 
-    private markChildAsMine(child:SortableDraw2D):void{
+    private markChildAsMine(child:Object2D):void{
         this._childIDs[child.id] = child;
         this._drawList.push(child);
 
         child.setParent(this._wrappedObject);
     }
 
-    public addChild(child:SortableDraw2D):boolean{
+    public addChild(child:Object2D):boolean{
         if(!this.containsChild(child)){
             this.markChildAsMine(child);
 
@@ -32,9 +32,9 @@ export class Scene implements Draw2D{
         return false;
     }
 
-    public addChildAt(child:SortableDraw2D, index:number):boolean{
+    public addChildAt(child:Object2D, index:number):boolean{
         if(!this.containsChild(child)){
-            let updatedDrawList:SortableDraw2D[] = [];
+            let updatedDrawList:Object2D[] = [];
 
             this._drawList.forEach((currChild, currIndex) => {
                 if(index === currIndex){
@@ -54,17 +54,17 @@ export class Scene implements Draw2D{
         return false;
     }
 
-    public addChildren(children:SortableDraw2D[]):void{
+    public addChildren(children:Object2D[]):void{
         children.forEach(child => this.addChild(child));
     }
 
-    public removeChild(child:SortableDraw2D):SortableDraw2D{
+    public removeChild(child:Object2D):Object2D{
         return this.removeChildAt(this.findChildIndex(child));
     }
 
-    public removeChildAt(index:number):SortableDraw2D{
+    public removeChildAt(index:number):Object2D{
         if(index in this._drawList){
-            let child:SortableDraw2D = this.getChildAt(index);
+            let child:Object2D = this.getChildAt(index);
 
             delete this._childIDs[child.id];
             this._drawList.splice(index, 1);
@@ -75,7 +75,7 @@ export class Scene implements Draw2D{
         }
     }
 
-    public removeChildren(children?:SortableDraw2D[]):void{
+    public removeChildren(children?:Object2D[]):void{
         if(children){
             children.forEach(child => this.removeChild(child));
         }
@@ -87,8 +87,8 @@ export class Scene implements Draw2D{
     }
 
     public depthSort():void{
-        let a:SortableDraw2D = null;
-        let b:SortableDraw2D = null;
+        let a:Object2D = null;
+        let b:Object2D = null;
 
         for(let i:number = 0; i < this.numChildren; i++){
             a = this.getChildAt(i);
@@ -106,7 +106,7 @@ export class Scene implements Draw2D{
         }
     }
 
-    public swapChildren(child1:SortableDraw2D, child2:SortableDraw2D):boolean{
+    public swapChildren(child1:Object2D, child2:Object2D):boolean{
         let index1:number = -1;
         let index2:number = -1;
 
@@ -127,8 +127,8 @@ export class Scene implements Draw2D{
     }
 
     public swapChildrenAt(index1:number, index2:number):boolean{
-        let a:SortableDraw2D = this.getChildAt(index1);
-        let b:SortableDraw2D = this.getChildAt(index2);
+        let a:Object2D = this.getChildAt(index1);
+        let b:Object2D = this.getChildAt(index2);
 
         if(a && b){
             this._drawList[index1] = b;
@@ -139,11 +139,11 @@ export class Scene implements Draw2D{
         return false;
     }
 
-    public containsChild(target:SortableDraw2D):boolean{
+    public containsChild(target:Object2D):boolean{
         return target.id in this._childIDs;
     }
 
-    public findChildIndex(target:SortableDraw2D):number{
+    public findChildIndex(target:Object2D):number{
         for(let i:number = 0; i < this.numChildren; i++){
             if(this.getChildAt(i) === target){
                 return i;
@@ -153,18 +153,28 @@ export class Scene implements Draw2D{
         return -1;
     }
 
-    public forEachChild(fn:(child:SortableDraw2D, index?:number)=>any):void{
+    public forEachChild(fn:(child:Object2D, index?:number)=>any):void{
         let i:number = 0;
         for(let object of this._drawList){
             fn(object, i++);
         }
     }
 
-    public getChildById(id:string):SortableDraw2D{
+    public forAllChildren(fn:(child:Object2D)=>any):void{
+        this.forEachChild(child => {
+            fn(child);
+
+            if(child.scene){
+                child.scene.forEachChild(fn);
+            }
+        });
+    }
+
+    public getChildById(id:string):Object2D{
         return this._childIDs[id] || null;
     }
 
-    public getChildAt(index:number):SortableDraw2D{
+    public getChildAt(index:number):Object2D{
         return this._drawList[index] || null;
     }
 

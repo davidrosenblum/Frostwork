@@ -128,6 +128,14 @@ var Scene = (function () {
             fn(object, i++);
         }
     };
+    Scene.prototype.forAllChildren = function (fn) {
+        this.forEachChild(function (child) {
+            fn(child);
+            if (child.scene) {
+                child.scene.forEachChild(fn);
+            }
+        });
+    };
     Scene.prototype.getChildById = function (id) {
         return this._childIDs[id] || null;
     };

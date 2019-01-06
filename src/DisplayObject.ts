@@ -1,7 +1,20 @@
-import { EventEmitter } from "./EventEmitter";
-import { Draw2D, Point, Size } from "./Interfaces";
+import { EventEmitter } from "events";
 import { TokenGenerator } from "./TokenGenerator";
 import { BoundingBox } from "./BoundingBox";
+
+export interface Draw2D{
+    draw(ctx:CanvasRenderingContext2D, offsetX:number, offsetY:number):void;
+}
+
+export interface Point{
+    x:number;
+    y:number;
+}
+
+export interface Size{
+    width:number;
+    height:number;
+}
 
 export abstract class DisplayObject extends EventEmitter implements Draw2D, Point, Size{
     private static tokens:TokenGenerator = new TokenGenerator(16);

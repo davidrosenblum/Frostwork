@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var BoundingBox_1 = require("./BoundingBox");
 var Errors_1 = require("./Errors");
 var MapUtils_1 = require("./MapUtils");
 var Object2D_1 = require("./Object2D");
@@ -102,6 +103,20 @@ var MapLayers = (function () {
         var num = 0;
         this.forEachScene(function (scene) { return num += scene.numChildren; });
         return num;
+    };
+    MapLayers.prototype.processClick = function (evt) {
+        var layer = this._layers[2];
+        var x = layer.x + evt.clientX;
+        var y = layer.y + evt.clientY;
+        var mouseBox = new BoundingBox_1.BoundingBox(x, y, 3, 3);
+        this._layers[2].scene.forEachChild(function (child) {
+            if (child.getBoundingBox().hitBoxTest(mouseBox)) {
+                child.emit("click", {
+                    x: x + child.x,
+                    y: y + child.y
+                });
+            }
+        });
     };
     Object.defineProperty(MapLayers.prototype, "mapSprite", {
         get: function () {

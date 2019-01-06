@@ -1,6 +1,5 @@
 import { Object2D } from "./Object2D";
-import { SortableDraw2D } from "./Interfaces";
-export declare class TextField extends Object2D implements SortableDraw2D {
+export declare class TextField extends Object2D {
     private static readonly CANVAS;
     private static readonly CTX;
     static defaultFont: string;
