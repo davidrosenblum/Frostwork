@@ -11,7 +11,7 @@
     "start": "tsc -w"
   },
   "name": "@davidrosenblum/frostwork",
-  "version": "0.1.4",
+  "version": "0.1.41",
   "description": "Top-down 2D game library for the HTML5 Canvas.",
   "devDependencies": {},
   "repository": {
