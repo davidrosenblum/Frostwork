@@ -56,7 +56,7 @@ var MapLayers = (function () {
                 object.x = col * this._mapGrid.width;
                 object.y = row * this._mapGrid.height;
                 if (object.height > this._mapGrid.height) {
-                    object.height -= (this._mapGrid.height);
+                    object.y -= (object.height - this._mapGrid.height);
                 }
                 return true;
             }
